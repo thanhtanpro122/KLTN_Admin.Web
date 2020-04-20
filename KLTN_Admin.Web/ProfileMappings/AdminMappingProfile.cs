@@ -13,6 +13,9 @@ namespace KLTN_Admin.Web.ProfileMappings
         public AdminMappingProfile()
         {
             CreateMap<AdminSharedModel, AdminViewModel>();
+
+            CreateMap<AdminViewModel, AdminSharedModel>();
+
         }
     }
 }

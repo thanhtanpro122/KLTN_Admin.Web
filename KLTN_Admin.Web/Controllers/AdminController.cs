@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using KLTN_Admin.ServiceInterfaces;
+using KLTN_Admin.SharedModels;
 using KLTN_Admin.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using X.PagedList;
@@ -27,6 +28,24 @@ namespace KLTN_Admin.Web.Controllers
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             return View(model.ToPagedList(pageNumber, pageSize));
+        }
+
+        [HttpPost]
+        public IActionResult Create(AdminViewModel admin)
+        {
+            //var checkusername = _adminService.CheckUserName(admin.UserName);
+            //if (checkusername)
+            //{
+            //    return NotFound();
+            //}
+            admin.Status = 2;
+
+            var flag = _adminService.CreateAdmin(_mapper.Map<AdminSharedModel>(admin));
+            if (!flag)
+            {
+                return NotFound();
+            }
+            return RedirectToAction("Index");
         }
     }
 }
