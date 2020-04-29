@@ -9,13 +9,15 @@ namespace KLTN_Admin.ServiceInterfaces
     {
         List<AdminSharedModel> GetAllAdmins();
 
-        AdminSharedModel GetAdminById(int adminId);
+        AdminSharedModel GetAdminById(string adminId);
 
         bool CreateAdmin(AdminSharedModel admin);
 
         bool EditAdmin(AdminSharedModel admin);
 
         bool CheckUserName(string username);
+
+        bool DeleteAdmin(string adminId);
 
     }
 }

@@ -23,8 +23,6 @@ namespace KLTN_Admin.Web.Controllers
         public IActionResult Index(int? page)
         {
             var model = _mapper.Map<List<AdminViewModel>>(_adminService.GetAllAdmins());
-            //return View(model);
-
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             return View(model.ToPagedList(pageNumber, pageSize));
@@ -33,11 +31,11 @@ namespace KLTN_Admin.Web.Controllers
         [HttpPost]
         public IActionResult Create(AdminViewModel admin)
         {
-            //var checkusername = _adminService.CheckUserName(admin.UserName);
-            //if (checkusername)
-            //{
-            //    return NotFound();
-            //}
+            var checkusername = _adminService.CheckUserName(admin.UserName);
+            if (checkusername)
+            {
+                return NotFound();
+            }
             admin.Status = 2;
 
             var flag = _adminService.CreateAdmin(_mapper.Map<AdminSharedModel>(admin));
@@ -46,6 +44,43 @@ namespace KLTN_Admin.Web.Controllers
                 return NotFound();
             }
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Edit(string id)
+        {
+            if (id == "")
+            {
+                return NotFound();
+            }
+
+            var admin = _mapper.Map<AdminViewModel>(_adminService.GetAdminById(id));
+            if (admin == null)
+            {
+                return NotFound();
+            }
+            return Json(admin);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(AdminViewModel admin)
+        {
+            var checkUpdate = _adminService.EditAdmin(_mapper.Map<AdminSharedModel>(admin));
+            if (!checkUpdate)
+            {
+                return NotFound();
+            }
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Delete(string id)
+        {
+            var CheckDelete = _adminService.DeleteAdmin(id);
+            if (!CheckDelete)
+            {
+                return NotFound();
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

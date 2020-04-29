@@ -54,7 +54,7 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <a asp-area="Admin" asp-controller="Admins" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger delete_admin">
+                                    <a asp-controller="Admin" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger delete_admin">
                                         Delete
                                     </a>
                                 </td>
@@ -124,26 +124,27 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa thông tin xe</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa thông tin admin</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             @using (Html.BeginForm("Edit", "Admin", FormMethod.Post))
             {
-                <div class="modal-body">
-                    <input type="text" id="Admins_Edit" name="AdminID" hidden />
-                    <input type="text" id="Admins_MatKhau" name="MatKhau" hidden />
-                    <div class="form-group">
-                        <label for="TenXe">UserName</label>
-                        <input class="form-control" type="text" id="UserName_Edit" name="UserName"
-                               placeholder="UserName">
-                    </div>
-                    <div class="form-group">
-                        <label for="BienSoXe">Họ tên</label>
-                        <input type="text" class="form-control" id="HoTen_Edit" name="HoTen" placeholder="Họ tên">
-                    </div>
+            <div class="modal-body">
+                <input type="text" id="Admins_Edit" name="Id" hidden />
+                <input type="text" id="Status" name="Status" hidden />
+                <input type="text" id="Admins_MatKhau" name="Password" hidden />
+                <div class="form-group">
+                    <label for="TenXe">UserName</label>
+                    <input class="form-control" type="text" id="UserName_Edit" name="UserName"
+                           placeholder="UserName">
                 </div>
+                <div class="form-group">
+                    <label for="BienSoXe">Name</label>
+                    <input type="text" class="form-control" id="Name_Edit" name="Name" placeholder="Họ tên">
+                </div>
+            </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-success">Edit</button>
@@ -159,7 +160,7 @@
         $(document).ready(function () {
             $(".edit-admin").click(function (e) {
                 $.ajax({
-                    url: "/Admin/Admins/Edit",
+                    url: "/Admin/Edit",
                     data: {
                         id: $(e.target).data("id")
                     },
@@ -168,10 +169,10 @@
                     success: function (data) {
                         console.log(data);
 
-                        $("#Admins_Edit").val(data.adminID);
+                        $("#Admins_Edit").val(data.id);
                         $("#UserName_Edit").val(data.userName);
-                        $("#HoTen_Edit").val(data.hoTen);
-                        $("#Admins_MatKhau").val(data.matKhau);
+                        $("#Name_Edit").val(data.name);
+                        $("#Admins_MatKhau").val(data.password);
 
                         $("#EditModal").modal("show");
                     },
