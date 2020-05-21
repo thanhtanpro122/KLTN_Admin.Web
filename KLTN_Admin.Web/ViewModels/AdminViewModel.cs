@@ -13,8 +13,13 @@ namespace KLTN_Admin.Web.ViewModels
 
         public string Password { get; set; }
 
-        public string Name { get; set; }
+        public string Email { get; set; }
 
-        public int Status { get; set; }
+        public int AdminType { get; set; }
+
+        public string[] AgentId { get; set; }
+
+        public string[] IsRoot { get; set; }
+
     }
 }

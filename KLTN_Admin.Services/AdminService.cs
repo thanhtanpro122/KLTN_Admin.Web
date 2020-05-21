@@ -13,6 +13,7 @@ namespace KLTN_Admin.Services
     {
         public AdminService() : base()
         {
+
         }
 
         public List<AdminSharedModel> GetAllAdmins()
@@ -33,17 +34,17 @@ namespace KLTN_Admin.Services
             }
             return JsonConvert.DeserializeObject<AdminSharedModel>(response.Content);
         }
-        public bool CreateAdmin(AdminSharedModel admin)
+        public AdminSharedModel CreateAdmin(AdminSharedModel admin)
         {
-            var request = new RestRequest("/addadmin", Method.POST, DataFormat.Json);
+            var request = new RestRequest("/admin", Method.POST, DataFormat.Json);
             request.AddJsonBody(admin);
             var response = _client.Execute(request);
             var statusCode = (int)response.StatusCode;
             if (statusCode != 200)
             {
-                return false;
+                return null;
             }
-            return true;
+            return JsonConvert.DeserializeObject<AdminSharedModel>(response.Content);
         }
 
         public bool EditAdmin(AdminSharedModel admin)
@@ -83,6 +84,50 @@ namespace KLTN_Admin.Services
                 return false;
             }
             return true;
+        }
+
+        public string Signin(string textusername, string textpassword)
+        {
+            var token = "";
+            var request = new RestRequest("/admin/signin", Method.POST, DataFormat.Json);
+            request.AddJsonBody(new { username= textusername , password = textpassword });
+            var response = _client.Execute(request);
+            var resJson = JsonConvert.DeserializeObject<dynamic>(response.Content);
+            var statusCode = (int)response.StatusCode;
+            if (statusCode == 200)
+            {
+                token = resJson.token;
+            }
+            return token;
+        }
+
+        public bool CreateManagement(ManagementSharedModel management)
+        {
+            var request = new RestRequest("/managementadmin", Method.POST, DataFormat.Json);
+            request.AddJsonBody(management);
+            var response = _client.Execute(request);
+            var statusCode = (int)response.StatusCode;
+            if (statusCode != 200)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public List<ManagementSharedModel> GetManagementByAgentId(string agentId)
+        {
+            var request = new RestRequest("/managementadmin/checkagent", Method.GET, DataFormat.Json);
+            request.AddJsonBody(new { agent = agentId });
+            var response = _client.Execute(request);
+            return JsonConvert.DeserializeObject<List<ManagementSharedModel>>(response.Content);
+        }
+
+        public List<ManagementSharedModel> GetManagementByAdminId(string adminId)
+        {
+            var request = new RestRequest("/managementadmin/checkadmin", Method.GET, DataFormat.Json);
+            request.AddJsonBody(new { admin = adminId });
+            var response = _client.Execute(request);
+            return JsonConvert.DeserializeObject<List<ManagementSharedModel>>(response.Content);
         }
     }
 }

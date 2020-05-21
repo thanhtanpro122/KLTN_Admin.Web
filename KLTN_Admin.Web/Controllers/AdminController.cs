@@ -14,15 +14,25 @@ namespace KLTN_Admin.Web.Controllers
     public class AdminController : BaseController
     {
         private readonly IAdminService _adminService;
+        private readonly IAgentService _agentService;
 
-        public AdminController(IAdminService adminService, IMapper mapper) : base(mapper)
+        public AdminController(IAdminService adminService, IAgentService agentService, IMapper mapper) : base(mapper)
         {
             _adminService = adminService;
+            _agentService = agentService;
         }
 
-        public IActionResult Index(int? page)
+        public IActionResult Index(string searchString, int? page)
         {
+            if (searchString != null)
+            {
+                page = 1;
+            }
             var model = _mapper.Map<List<AdminViewModel>>(_adminService.GetAllAdmins());
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                model = model.Where(s => s.UserName.Contains(searchString)).ToList();
+            }
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             return View(model.ToPagedList(pageNumber, pageSize));
@@ -36,12 +46,35 @@ namespace KLTN_Admin.Web.Controllers
             {
                 return NotFound();
             }
-            admin.Status = 2;
+            admin.AdminType = 1;
 
-            var flag = _adminService.CreateAdmin(_mapper.Map<AdminSharedModel>(admin));
-            if (!flag)
+            var adminNew = _adminService.CreateAdmin(_mapper.Map<AdminSharedModel>(admin));
+            if (adminNew == null)
             {
                 return NotFound();
+            }
+
+            foreach(var item in admin.AgentId)
+            {
+                var management = new ManagementViewModel()
+                {
+                    Agent = item,
+                    IsCreator = "5ec2add03694f0452c7d8115",
+                    Isroot = false,
+                    Admin = adminNew.Id
+                };
+                foreach(var isroot in admin.IsRoot)
+                {
+                    if (item == isroot)
+                    {
+                        management.Isroot = true;
+                    }
+                    var flag = _adminService.CreateManagement(_mapper.Map<ManagementSharedModel>(management));
+                    if (!flag)
+                    {
+                        return NotFound();
+                    }
+                }
             }
             return RedirectToAction("Index");
         }
@@ -81,6 +114,24 @@ namespace KLTN_Admin.Web.Controllers
                 return NotFound();
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult SpecifyAgent(AgentForAdminViewModel model)
+        {
+            var addedAgent = _agentService.CreateAgent(_mapper.Map<AgentSharedModel>(model));
+            var agentNew = _mapper.Map<AgentViewModel>(addedAgent);
+            if (agentNew == null)
+            {
+                return Json(null);
+            }
+            return Json(new { agentNew, isRoot = model.AsRoot });
+        }
+
+        public IActionResult LoadPartialSelectAgent()
+        {
+            var model = _mapper.Map<List<AgentViewModel>>(_agentService.GetAllAgent());
+
+            return PartialView("Partials/_SelectAgent", model);
         }
     }
 }

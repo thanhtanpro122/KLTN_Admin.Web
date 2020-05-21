@@ -1,0 +1,156 @@
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList
+@using X.PagedList.Mvc.Common
+@model IPagedList<LocationViewModel>
+@{
+    ViewData["Title"] = "Location";
+    ViewData["Page"] = "Location";
+}
+
+<div class="row grid-margin">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Location</h4>
+                <div class="table-toolbar">
+                    <div>
+                        <div style="float:left;">
+                            <button class="btn btn-success" data-toggle="modal"
+                                    data-target="#CreateModal">
+                                Thêm mới
+                            </button>
+                        </div>
+                        <div style="float:right;">
+                            @using (Html.BeginForm("Index", "Admins", FormMethod.Post))
+                            {
+                                <input type="text" id="searchString" name="searchString" placeholder="Tìm kiếm" value="@ViewBag.searchString" class="form-control" style="width: auto; display: inline-block" />
+                                <button type="submit" id="btnTimKiem" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-search"></span> Search
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Address</th>
+                            <th>Vĩ Độ</th>
+                            <th>Kinh Độ</th>
+                            <th width="150">Chỉnh sửa</th>
+                            <th width="85">Xóa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Address</td>
+                                <td>@item.CoordLatitude</td>
+                                <td>@item.CoordLongtitude</td>
+                                <td>
+                                    <a href="#" class="btn btn-primary edit-admin" data-id="@item.Id">
+                                        Edit
+                                    </a>
+                                </td>
+                                <td>
+                                    <a asp-controller="Location" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger delete_admin">
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div style="float:right;padding-top: 25px;">
+                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                    @(Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions
+                        {
+                            LiElementClasses = new string[] { "page-item" },
+                            PageClasses = new string[] { "page-link" },
+                            UlElementClasses = new string[] { "pagination rounded-flat pagination-success" }
+                        }))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<!-- Create modal -->
+<div class="modal fade" id="CreateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thêm Xe</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("Create", "Location", FormMethod.Post, new { id = "create-admins-form" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>UserName</label>
+                        <input class="form-control" type="text" id="UserName" name="UserName"
+                               placeholder="UserName">
+                        <span id="validate_UserName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>PassWord</label>
+                        <input class="form-control" type="text" id="Password" name="Password"
+                               placeholder="Password">
+                        <span id="validate_Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" id="Name" name="Name" placeholder="Name">
+                        <span id="validate_Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Create</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Edit modal -->
+<div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa thông tin admin</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("Edit", "Admin", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <input type="text" id="Admins_Edit" name="Id" hidden />
+                    <input type="text" id="Status" name="Status" hidden />
+                    <input type="text" id="Admins_MatKhau" name="Password" hidden />
+                    <div class="form-group">
+                        <label for="TenXe">UserName</label>
+                        <input class="form-control" type="text" id="UserName_Edit" name="UserName"
+                               placeholder="UserName">
+                    </div>
+                    <div class="form-group">
+                        <label for="BienSoXe">Name</label>
+                        <input type="text" class="form-control" id="Name_Edit" name="Name" placeholder="Họ tên">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Edit</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!--END Modal -->

@@ -11,7 +11,14 @@
     <link href="~/css/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="~/css/tempusdominus-bootstrap-4/build/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
     <link href="~/js/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <script src="~/js/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/js/dashboard.js"></script>
+    <script src="~/js/misc.js"></script>
 
+    <script src="~/js/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/js/moment/min/moment.min.js"></script>
+    <script src="~/css/tempusdominus-bootstrap-4/build/js/tempusdominus-bootstrap-4.js"></script>
 </head>
 <body>
     <div class="container-scroller">
@@ -26,22 +33,10 @@
                     <i class="mdi mdi-menu"></i>
                 </button>
                 <ul class="navbar-nav navbar-nav-right ml-lg-auto">
-                    @*<li class="nav-item nav-search">
-                            <form class="nav-link form-inline mt-2 mt-md-0 d-none d-lg-flex">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Search">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">
-                                            <i class="mdi mdi-magnify"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </form>
-                        </li>*@
                     <li class="nav-item  nav-profile dropdown">
                         <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown">
                             <img src="~/image/faces-clipart/pic-1.png" />
-                            <span class="profile-name">@Context.Request.Cookies["Username"]</span>
+                            <span class="profile-name">@Context.Request.Cookies["UserName"]</span>
                         </a>
                         <div class="dropdown-menu navbar-dropdown w-100" aria-labelledby="profileDropdown">
                             <a class="dropdown-item" data-toggle="modal" data-target="#ChangePassword">
@@ -72,19 +67,25 @@
                             <span class="menu-title">Dashboard</span>
                         </a>
                     </li>
-                    @if (Context.Request.Cookies["IsAdmin"] == "1")
+                    @if (Context.Request.Cookies["AdminType"] == "0")
                     {
                         <li class="nav-item @((string)ViewData["Page"] == "Admins" ? "active" : "")">
-                            <a class="nav-link" href="/Admin/Admins/Index">
+                            <a class="nav-link" href="/Admin/Index">
                                 <i class="mdi mdi-lock-outline menu-icon"></i>
                                 <span class="menu-title">Admin</span>
                             </a>
                         </li>
                     }
                     <li class="nav-item @((string)ViewData["Page"] == "NguoiDung" ? "active" : "")">
-                        <a class="nav-link" href="/Admin/NguoiDungs/Index">
+                        <a class="nav-link" href="/NguoiDung/Index">
                             <i class="mdi mdi-account-search menu-icon"></i>
                             <span class="menu-title">Người dùng</span>
+                        </a>
+                    </li>
+                    <li class="nav-item @((string)ViewData["Page"] == "Location" ? "active" : "")">
+                        <a class="nav-link" href="/Location/Index">
+                            <i class="mdi mdi-map-marker menu-icon"></i>
+                            <span class="menu-title">Location</span>
                         </a>
                     </li>
                     <li class="nav-item @((string)ViewData["Page"] == "DatVe" ? "active" : "")">
@@ -94,15 +95,15 @@
                         </a>
                     </li>
                     <li class="nav-item @((string)ViewData["Page"] == "DieuHanh" ? "active" : "")">
-                        <a class="nav-link" href="/Admin/DieuHanh/Index">
+                        <a class="nav-link" href="/Route/Index">
                             <i class="mdi mdi-speedometer menu-icon"></i>
-                            <span class="menu-title">Điều hành xe</span>
+                            <span class="menu-title">Điều hành</span>
                         </a>
                     </li>
-                    <li class="nav-item @((string)ViewData["Page"] == "Tuyen" ? "active" : "")">
+                    <li class="nav-item @((string)ViewData["Page"] == "NhaXe" ? "active" : "")">
                         <a class="nav-link" href="/Admin/TuyenXe/Index">
                             <i class="mdi mdi-swap-horizontal menu-icon"></i>
-                            <span class="menu-title">Quản lí tuyến</span>
+                            <span class="menu-title">Quản lí nhà xe</span>
                         </a>
                     </li>
                     <li class="nav-item @((string)ViewData["Page"] == "Xe" ? "active" : "")">
@@ -177,16 +178,6 @@
         </div>
     </div>
 
-
-
-    <script src="~/js/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="~/js/dashboard.js"></script>
-    <script src="~/js/misc.js"></script>
-
-    <script src="~/js/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-    <script src="~/js/moment/min/moment.min.js"></script>
-    <script src="~/css/tempusdominus-bootstrap-4/build/js/tempusdominus-bootstrap-4.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $('.confirm_logout').click(function (e) {

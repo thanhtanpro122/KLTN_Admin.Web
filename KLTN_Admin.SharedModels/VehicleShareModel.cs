@@ -1,0 +1,37 @@
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace KLTN_Admin.SharedModels
+{
+    public class VehicleShareModel
+    {
+        [JsonProperty("_id")]
+        public string Id { get; set; }
+
+        [JsonProperty("type")]
+        public int Type { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("numberSeats")]
+        public string NumberSeats { get; set; }
+
+        [JsonProperty("licensePlates")]
+        public string LicensePlates { get; set; }
+
+        [JsonProperty("startLocation")]
+        public string StartLocation { get; set; }
+
+        [JsonProperty("endLocation")]
+        public string EndLocation { get; set; }
+
+        [JsonProperty("status")]
+        public int Status { get; set; }
+
+        [JsonProperty("agent")]
+        public string Agent { get; set; }
+    }
+}

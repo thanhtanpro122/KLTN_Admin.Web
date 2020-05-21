@@ -12,10 +12,15 @@ namespace KLTN_Admin.Web.ProfileMappings
     {
         public AdminMappingProfile()
         {
-            CreateMap<AdminSharedModel, AdminViewModel>();
+            CreateMap<AdminSharedModel, AdminViewModel>().ReverseMap();
 
-            CreateMap<AdminViewModel, AdminSharedModel>();
+            CreateMap<LocationSharedModel, LocationViewModel>().ReverseMap();
 
+            CreateMap<RouteSharedModel, RouteViewModel>().ReverseMap();
+
+            CreateMap<AgentSharedModel, AgentViewModel>().ReverseMap();
+
+            CreateMap<ManagementSharedModel, ManagementViewModel>().ReverseMap();
         }
     }
 }

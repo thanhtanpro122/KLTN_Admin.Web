@@ -1,0 +1,175 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
+using KLTN_Admin.ServiceInterfaces;
+using KLTN_Admin.SharedModels;
+using KLTN_Admin.Web.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+using X.PagedList;
+
+namespace KLTN_Admin.Web.Controllers
+{
+    public class RouteController : BaseController
+    {
+        private readonly IRouteService _routeService;
+        private readonly ILocationService _locationService;
+        private readonly IVehicleService _vehicleService;
+        private readonly IAgentService _agentService;
+
+        public RouteController(IRouteService routeService, ILocationService locationService, IVehicleService vehicleService, IAgentService agentService, IMapper mapper) : base(mapper)
+        {
+            _routeService = routeService;
+            _locationService = locationService;
+            _vehicleService = vehicleService;
+            _agentService = agentService;
+        }
+        public IActionResult Index(string agentId, string vehicleId, DateTime startDate, int? page)
+        {
+            var routes = _mapper.Map<List<RouteViewModel>>(_routeService.GetListRoute());
+
+            foreach(var item in routes)
+            {
+                if(item.StartLocation != null || item.EndLocation != null)
+                {
+                    item.StartLocationString = _locationService.GetLocationById(item.StartLocation).Address;
+                    item.EndLocationString = _locationService.GetLocationById(item.EndLocation).Address;
+                }
+                if (item.Vehicle != null)
+                {
+                    var vehicle = _vehicleService.GetVehicleById(item.Vehicle);
+                    item.NameVehicle = vehicle.Name;
+                    item.Agent = vehicle.Agent;
+                }
+            }
+            if (agentId != null)
+            {
+                page = 1;
+                routes = routes.Where(x => x.Agent == agentId).ToList();
+            }
+            if (vehicleId != null)
+            {
+                page = 1;
+                routes = routes.Where(x => x.Vehicle == vehicleId).ToList();
+            }
+            var datevalid = new DateTime(0001, 1, 1);
+            if (startDate.Date != datevalid)
+            {
+                page = 1;
+                routes = routes.Where(x => x.DepartureDate.Date == startDate.Date).ToList();
+            }
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            return View(routes.ToPagedList(pageNumber, pageSize));
+        }
+
+        public JsonResult GetListVehicle()
+        {
+            var vehicles = _vehicleService.GetListVehicle();
+            return Json(vehicles);
+        }
+
+        public JsonResult GetListAgent()
+        {
+            var agents = _agentService.GetAllAgent();
+            return Json(agents);
+        }
+
+        public JsonResult GetListLocation()
+        {
+            var locations= _locationService.GetListLocation();
+            return Json(locations);
+        }
+        [HttpPost]
+        public IActionResult Create(RouteViewModel route)
+        {
+            route.DepartureDate = route.DepartureDate.Date;
+            route.Status = 0;
+            var vehicle = _vehicleService.GetVehicleById(route.Vehicle);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+            route.StartLocation = vehicle.StartLocation;
+            route.EndLocation = vehicle.EndLocation;
+
+
+            var flag = _routeService.CreateRoute(_mapper.Map<RouteSharedModel>(route));
+            if (!flag)
+            {
+                return NotFound();
+            }
+            return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public IActionResult Edit(string id)
+        {
+            if (id == "")
+            {
+                return NotFound();
+            }
+
+            var route = _mapper.Map<RouteViewModel>(_routeService.GetRouteById(id));
+            if (route == null)
+            {
+                return NotFound();
+            }
+            if (route.Vehicle != null)
+            {
+                var vehicle = _vehicleService.GetVehicleById(route.Vehicle);
+                route.NameVehicle = vehicle.Name;
+                route.Agent = vehicle.Agent;
+                route.LicensePlates = vehicle.LicensePlates;
+            }
+            return Json(route);
+        }
+        [HttpPost]
+        public IActionResult Edit(RouteViewModel route)
+        {
+            route.DepartureDate = route.DepartureDate.Date;
+            var vehicle = _vehicleService.GetVehicleById(route.Vehicle);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+            route.StartLocation = vehicle.StartLocation;
+            route.EndLocation = vehicle.EndLocation;
+
+            var flag = _routeService.EditRoute(_mapper.Map<RouteSharedModel>(route));
+            if (!flag)
+            {
+                return NotFound();
+            }
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Delete(string id)
+        {
+            var flag = _routeService.DeleteRoute(id);
+            if (!flag)
+            {
+                return NotFound();
+            }
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult ChangeStatus(string id)
+        {
+            var route = _mapper.Map<RouteViewModel>(_routeService.GetRouteById(id));
+            if (route == null)
+            {
+                return NotFound();
+            }
+            route.Status = 1;
+            var flag = _routeService.EditRoute(_mapper.Map<RouteSharedModel>(route));
+            if (!flag)
+            {
+                return NotFound();
+            }
+            //còn làm tiếp bên bảng đặt vé
+
+            return RedirectToAction("Index");
+        }
+    }
+}

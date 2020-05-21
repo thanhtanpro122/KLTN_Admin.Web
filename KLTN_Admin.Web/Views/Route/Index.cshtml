@@ -1,0 +1,521 @@
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList
+@using X.PagedList.Mvc.Common
+@model IPagedList<RouteViewModel>
+@{
+    ViewData["Title"] = "DieuHanh";
+    ViewData["Page"] = "DieuHanh";
+}
+<style>
+    .ui-autocomplete.ui-front {
+        z-index: 2147483647 !important;
+    }
+</style>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<div class="row grid-margin">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Điều Hành Xe</h2>
+                <div class="table-toolbar">
+                    <div style="padding-bottom: 4rem;">
+                        <div style="float:left;">
+                            <a>
+                                <button class="btn btn-success" data-toggle="modal"
+                                        data-target="#CreateModal">
+                                    Thêm mới <i class="icon-plus icon-white"></i>
+                                </button>
+                            </a>
+                        </div>
+                        <div style="float:right;">
+                            @using (Html.BeginForm("Index", "Route", FormMethod.Post))
+                            {
+                                <input type="text" id="nhaxe" name="nhaxe" placeholder="Tuyến xe" class="form-control" style="width: auto; display: inline-block" />
+                                <input type="text" id="agentId" name="agentId" hidden />
+
+                                <input type="text" id="xe" name="xe" placeholder="Xe" class="form-control" style="width: auto; display: inline-block" />
+                                <input type="text" id="vehicleId" name="vehicleId" hidden />
+
+                                <input id="startDate" name="startDate" placeholder="Ngày khởi hành" class="form-control" style="width: auto; display: inline-block" />
+                                <button type="submit" id="btnTimKiem" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-search"></span> Search
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            @*<th>Mã điều hành</th>*@
+                            <th>Ngày khởi hành</th>
+                            <th>Tuyến xe</th>
+                            <th>Thời gian chạy</th>
+                            <th>Xe</th>
+                            @*<th>Chỗ ngồi</th>*@
+                            <th>Đổi trạng thái</th>
+                            <th>Chỉnh sửa</th>
+                            <th>Xóa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var tuyen = item.StartLocationString + "->" + item.EndLocationString;
+                            var thoigian = item.StartTime + "-" + item.EndTime;
+
+                            <tr>
+                                @*<td>@item.MaDieuHanh</td>*@
+                                <td>@item.DepartureDate.ToString("dd/MM/yyyy")</td>
+                                <td>@tuyen</td>
+                                <td>@thoigian</td>
+                                <td>@item.NameVehicle</td>
+                                @*<td>
+                                        <p>
+                                            @item.TinhTrang / @item.TongGhe
+                                        </p>
+                                    </td>*@
+
+                                <td>
+                                    @if (item.Status == 0)
+                                    {
+                                        <p>Chua hoan thanh</p>
+                                    }
+                                    else
+                                    {
+                                        <p>Hoan thanh</p>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.Status == 0)
+                                    {
+                                        <a asp-controller="Route" asp-action="ChangeStatus" asp-route-id="@item.Id" class="btn btn-success change-status">
+                                            Change
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <button disabled class="btn btn-success change-status" data-id="@item.Id">
+                                            Change
+                                        </button>
+                                    }
+
+                                </td>
+                                <td>
+                                    <a class="btn btn-primary edit-dieuhanh" data-id="@item.Id">
+                                        Edit
+                                    </a>
+                                </td>
+                                <td>
+                                    <a asp-controller="Route" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger delete_dieuhanh">
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div style="float:right;padding-top: 25px;">
+                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                    @(Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions
+                        {
+                            LiElementClasses = new string[] { "page-item" },
+                            PageClasses = new string[] { "page-link" },
+                            UlElementClasses = new string[] { "pagination rounded-flat pagination-success" }
+                        }))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<!-- Create modal -->
+<div class="modal fade" id="CreateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thêm Điều hành</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("Create", "Route", FormMethod.Post, new { id = "create_route_form" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="exampleInputName1">Ngày khởi hành</label>
+                        <input class="form-control" id="DepartureDate" name="DepartureDate">
+                        <span id="validate_DepartureDate" class="text-danger"></span>
+                    </div>
+                    @*<div class="form-group">
+                            <label for="DiaDiemDi">Địa điểm đi</label>
+                            <input type="text" class="form-control" id="StartLocation_Create" name="StartLocation_Create" placeholder="Địa điểm đi">
+                            <input type="text" id="StartLocation" name="StartLocation" hidden />
+                            <span id="validate_StartLocation" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="DiaDiemDen">Địa điểm điến</label>
+                            <input type="text" class="form-control" id="EndLocation_Create" name="EndLocation_Create" placeholder="Địa điểm đến">
+                            <input type="text" id="EndLocation" name="EndLocation" hidden />
+                            <span id="validate_EndLocation" class="text-danger"></span>
+                        </div>*@
+                    <div class="form-group">
+                        <label for="exampleInputPassword4">Chọn xe</label>
+                        <input type="text" id="vehicleId_create" name="Vehicle" hidden />
+                        <input type="text" class="form-control" id="vehicle_create" name="xe" placeholder="Chọn xe">
+                        <span id="validate_xe" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="GiaVe">Giá vé</label>
+                        <input type="text" class="form-control" id="Price" name="Price" placeholder="Giá vé">
+                        <span id="validate_Price" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="ThoiGianKhoiHanh">Giờ đi</label>
+                        <div class="input-group date" id="ThoiGianKhoiHanh_Create" data-target-input="nearest">
+                            <div class="input-group" data-target="#ThoiGianKhoiHanh_Create" data-toggle="datetimepicker">
+                                <input type="text" id="StartTime" name="StartTime" placeholder="Thời gian đến" class="form-control datetimepicker-input" data-target="#ThoiGianKhoiHanh_Create" />
+                                <div class="input-group-addon input-group-append"><i class="mdi mdi-clock input-group-text"></i></div>
+                            </div>
+                            <span id="validate_GioDi" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ThoiGianKetThuc">Giờ đến</label>
+                        <div class="input-group date" id="ThoiGianKetThuc_Create" data-target-input="nearest">
+                            <div class="input-group" data-target="#ThoiGianKetThuc_Create" data-toggle="datetimepicker">
+                                <input type="text" id="EndTime" name="EndTime" placeholder="Thời gian đến" class="form-control datetimepicker-input" data-target="#ThoiGianKetThuc_Create" />
+                                <div class="input-group-addon input-group-append"><i class="mdi mdi-clock input-group-text"></i></div>
+                            </div>
+                            <span id="validate_GioDen" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Create</button>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<!-- Edit modal -->
+<div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa thông tin</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("Edit", "Route", FormMethod.Post, new { id = "edit_route_form" }))
+            {
+                <div class="modal-body">
+                    <input type="text" id="route_id" name="Id" hidden />
+                    <div class="form-group">
+                        <label for="exampleInputName1">Ngày khởi hành</label>
+                        <input class="form-control" id="DepartureDate_Edit" name="DepartureDate">
+                        <span id="validate_DepartureDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleInputPassword4">Chọn xe</label>
+                        <input type="text" id="vehicleId_edit" name="Vehicle" hidden />
+                        <input type="text" class="form-control" id="vehicle_edit" name="xe" placeholder="Chọn xe">
+                        <span id="validate_xe" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="GiaVe">Giá vé</label>
+                        <input type="text" class="form-control" id="price_edit" name="Price" placeholder="Giá vé">
+                        <span id="validate_Price" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="ThoiGianKhoiHanh">Giờ đi</label>
+                        <div class="input-group date" id="ThoiGianKhoiHanh_Edit" data-target-input="nearest">
+                            <div class="input-group" data-target="#ThoiGianKhoiHanh_Edit" data-toggle="datetimepicker">
+                                <input type="text" id="StartTime_Edit" name="StartTime" placeholder="Thời gian đến" class="form-control datetimepicker-input" data-target="#ThoiGianKhoiHanh_Edit" />
+                                <div class="input-group-addon input-group-append"><i class="mdi mdi-clock input-group-text"></i></div>
+                            </div>
+                            <span id="validate_GioDi" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ThoiGianKetThuc">Giờ đến</label>
+                        <div class="input-group date" id="ThoiGianKetThuc_Edit" data-target-input="nearest">
+                            <div class="input-group" data-target="#ThoiGianKetThuc_Edit" data-toggle="datetimepicker">
+                                <input type="text" id="EndTime_Edit" name="EndTime" placeholder="Thời gian đến" class="form-control datetimepicker-input" data-target="#ThoiGianKetThuc_Edit" />
+                                <div class="input-group-addon input-group-append"><i class="mdi mdi-clock input-group-text"></i></div>
+                            </div>
+                            <span id="validate_GioDen" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Save changes</button>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script>
+        var getSuggestionAgent = function () {
+            $.ajax({
+                url: "/Route/GetListAgent",
+                data: {},
+                type: "GET",
+                contentType: "json",
+                success: function (data) {
+                    console.log(data)
+                    items = [];
+                    nhaxe = [];
+                    $.each(data, function (i, item) {
+                        var id = item._id;
+                        var name = item.name;
+                        nhaxe.push({
+                            id: id,
+                            name: name
+                        });
+                    });
+                    // response(items);
+                    $("#nhaxe").autocomplete({
+                        source: nhaxe.map(r => r.name),
+                        select: function (event, ui) {
+                            var selection = ui.item.label;
+                            $("#nhaxe").val(selection);
+                            $("#agentId").val(
+                                nhaxe[nhaxe.map(r => r.name).indexOf(selection)].id
+                            );
+                            console.log(nhaxe[nhaxe.map(r => r.name).indexOf(selection)].id)
+                            return false;
+                        }
+                    }).on('focus', () => { $('.ui-autocomplete').addClass('ui-front') }).on('blur', () => { $('.ui-autocomplete').removeClass('ui-front') });
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                    console.log("errror");
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                    console.log("EEE");
+                }
+            });
+        }();
+
+        var getSuggestionVehicle = function () {
+            $.ajax({
+                url: "/Route/GetListVehicle",
+                data: {},
+                type: "GET",
+                contentType: "json",
+                success: function (data) {
+                    console.log(data)
+                    items = [];
+                    bienso = [];
+                    $.each(data, function (i, item) {
+                        var id = item._id;
+                        var xe = item.licensePlates;
+                        bienso.push({
+                            id: id,
+                            name: xe
+                        });
+                    });
+                    $("#xe").autocomplete({
+                        source: bienso.map(r => r.name),
+                        select: function (event, ui) {
+                            var selection = ui.item.label;
+                            $("#xe").val(selection);
+                            $("#vehicleId").val(
+                                bienso[bienso.map(r => r.name).indexOf(selection)].id
+                            );
+                            console.log(bienso[bienso.map(r => r.name).indexOf(selection)].id)
+                            return false;
+                        }
+                    }).on('focus', () => { $('.ui-autocomplete').addClass('ui-front') }).on('blur', () => { $('.ui-autocomplete').removeClass('ui-front') });
+                    $("#vehicle_create").autocomplete({
+                        source: bienso.map(r => r.name),
+                        select: function (event, ui) {
+                            var selection = ui.item.label;
+                            $("#vehicle_create").val(selection);
+                            $("#vehicleId_create").val(
+                                bienso[bienso.map(r => r.name).indexOf(selection)].id
+                            );
+                            console.log(bienso[bienso.map(r => r.name).indexOf(selection)].id)
+                            return false;
+                        }
+                    }).on('focus', () => { $('.ui-autocomplete').addClass('ui-front') }).on('blur', () => { $('.ui-autocomplete').removeClass('ui-front') });
+                    $("#vehicle_edit").autocomplete({
+                        source: bienso.map(r => r.name),
+                        select: function (event, ui) {
+                            var selection = ui.item.label;
+                            $("#vehicle_edit").val(selection);
+                            $("#vehicleId_edit").val(
+                                bienso[bienso.map(r => r.name).indexOf(selection)].id
+                            );
+                            console.log(bienso[bienso.map(r => r.name).indexOf(selection)].id)
+                            return false;
+                        }
+                    }).on('focus', () => { $('.ui-autocomplete').addClass('ui-front') }).on('blur', () => { $('.ui-autocomplete').removeClass('ui-front') });
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                    console.log(response)
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                    console.log(response);
+                }
+            });
+        }();
+
+        $(document).ready(function () {
+            $('.change-status').click(function (e) {
+                var result = confirm("Ban muon doi trang thai");
+                if (!result) {
+                    e.preventDefault();
+                }
+            });
+
+            $(".edit-dieuhanh").click(function (e) {
+                $.ajax({
+                    url: "/Route/Edit",
+                    data: {
+                        id: $(this).data("id")
+                    },
+                    type: "GET",
+                    contentType: "json",
+                    beforeSend: function () {
+                    },
+                    complete: function () {
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        $("#route_id").val(data.id);
+                        $("#DepartureDate_Edit").val(data.departureDate);
+                        $("#vehicle_edit").val(data.licensePlates);
+                        $("#vehicleId_edit").val(data.vehicle);
+                        $("#price_edit").val(data.price);
+                        $("#StartTime_Edit").val(data.startTime);
+                        $("#EndTime_Edit").val(data.endTime);
+
+                        $("#EditModal").modal("show");
+                    },
+                    error: function (response) {
+                        console.log(response)
+                    }
+                });
+            });
+
+            $('.delete_dieuhanh').click(function (e) {
+                var result = confirm("Want to delete?");
+                if (!result) {
+                    e.preventDefault();
+                }
+            });
+
+            $("#startDate").datepicker({
+                dateFormat: 'yy-mm-dd',//check change
+                changeMonth: true,
+                changeYear: true
+            });
+            $("#DepartureDate").datepicker({
+                dateFormat: 'yy-mm-dd',//check change
+                changeMonth: true,
+                changeYear: true
+            });
+            $("#DepartureDate_Edit").datepicker({
+                dateFormat: 'yy-mm-dd',//check change
+                changeMonth: true,
+                changeYear: true
+            });
+            $('#ThoiGianKhoiHanh_Create').datetimepicker({
+                format: 'LT',
+                format: 'HH:mm'
+            });
+            $('#ThoiGianKetThuc_Create').datetimepicker({
+                format: 'LT',
+                format: 'HH:mm'
+            });
+            $('#ThoiGianKhoiHanh_Edit').datetimepicker({
+                format: 'LT',
+                format: 'HH:mm'
+            });
+            $('#ThoiGianKetThuc_Edit').datetimepicker({
+                format: 'LT',
+                format: 'HH:mm'
+            });
+
+            $("#create_route_form").submit(() => {
+                $("#validate_DepartureDate").html("");
+                $("#validate_StartLocation").html("");
+                $("#validate_EndLocation").html("");
+                $("#validate_xe").html("");
+                $("#validate_Price").html("");
+                $("#validate_GioDi").html("");
+                $("#validate_GioDen").html("");
+
+                //let valid = true;
+                //let ngaykhoihanh = $("#NgayKhoiHanh").val();
+
+                //if (ngaykhoihanh == "") {
+                //    $("#validate_ngaykhoihanh").html("Ngay khoi hanh khong hop le");
+                //    valid = false;
+                //}
+
+                //if (tuyenxe == "") {
+                //    $("#validate_tuyenxe").html("Tuyen xe khong hop le");
+                //    valid = false;
+                //}
+
+                //if (xe == "") {
+                //    $("#validate_xe").html("Xe khong hop le");
+                //    valid = false;
+                //}
+
+                //return valid;
+            });
+
+            $("#edit_route_form").submit(() => {
+                //$("#validate_NgayKhoiHanh_Edit").html("");
+                //$("#validate_tuyenxe-edit").html("");
+                //$("#validate_xe").html("");
+
+                let valid = true;
+                //let ngaykhoihanh = $("#NgayKhoiHanh_Edit").val();
+                //let tuyenxe = $("#tuyenxe-edit").val();
+                //let xe = $("#xe-edit").val();
+
+                //if (ngaykhoihanh == "") {
+                //    $("#validate_NgayKhoiHanh_Edit").html("Ngay khoi hanh khong hop le");
+                //    valid = false;
+                //}
+
+                //if (tuyenxe == "") {
+                //    $("#validate_tuyenxe-edit").html("Tuyen xe khong hop le");
+                //    valid = false;
+                //}
+
+                //if (xe == "") {
+                //    $("#validate_xe-edit").html("Xe khong hop le");
+                //    valid = false;
+                //}
+
+                return valid;
+            });
+        });
+    </script>
+}
+

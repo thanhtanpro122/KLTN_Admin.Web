@@ -34,7 +34,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Mã admin</th>
+                            @*<th>Mã admin</th>*@
                             <th>UserName</th>
                             <th>Name</th>
                             <th width="150">Chỉnh sửa</th>
@@ -45,9 +45,9 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td>@item.Id</td>
+                                @*<td>@item.Id</td>*@
                                 <td>@item.UserName</td>
-                                <td>@item.Name</td>
+                                <td>@item.Email</td>
                                 <td>
                                     <a href="#" class="btn btn-primary edit-admin" data-id="@item.Id">
                                         Edit
@@ -84,7 +84,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Thêm Xe</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Thêm Admin</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -105,9 +105,14 @@
                         <span id="validate_Password" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label >Name</label>
-                        <input type="text" class="form-control" id="Name" name="Name" placeholder="Name">
-                        <span id="validate_Name" class="text-danger"></span>
+                        <label>Email</label>
+                        <input type="email" class="form-control" id="Email" name="Email" placeholder="Email">
+                        <span id="validate_Email" class="text-danger"></span>
+                    </div>
+                    <div id="display-agents">
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-info choose_agent">Chọn nhà xe</button>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -131,20 +136,20 @@
             </div>
             @using (Html.BeginForm("Edit", "Admin", FormMethod.Post))
             {
-            <div class="modal-body">
-                <input type="text" id="Admins_Edit" name="Id" hidden />
-                <input type="text" id="Status" name="Status" hidden />
-                <input type="text" id="Admins_MatKhau" name="Password" hidden />
-                <div class="form-group">
-                    <label for="TenXe">UserName</label>
-                    <input class="form-control" type="text" id="UserName_Edit" name="UserName"
-                           placeholder="UserName">
+                <div class="modal-body">
+                    <input type="text" id="Admins_Edit" name="Id" hidden />
+                    <input type="text" id="Status" name="Status" hidden />
+                    <input type="text" id="Admins_MatKhau" name="Password" hidden />
+                    <div class="form-group">
+                        <label for="TenXe">UserName</label>
+                        <input class="form-control" type="text" id="UserName_Edit" name="UserName"
+                               placeholder="UserName">
+                    </div>
+                    <div class="form-group">
+                        <label for="BienSoXe">Name</label>
+                        <input type="text" class="form-control" id="Name_Edit" name="Name" placeholder="Họ tên">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="BienSoXe">Name</label>
-                    <input type="text" class="form-control" id="Name_Edit" name="Name" placeholder="Họ tên">
-                </div>
-            </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-success">Edit</button>
@@ -153,11 +158,83 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="AgentModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Chọn nhà xe</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="select-agent">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" id="select-agent-ok">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!--END Modal -->
 
 @section scripts{
     <script type="text/javascript">
         $(document).ready(function () {
+            $(".choose_agent").click(function (e) {
+                $("#CreateModal").modal("hide");
+                $("#select-agent").load("/Admin/LoadPartialSelectAgent");
+                $("#AgentModel").modal("show");
+            });
+
+            $("#select-agent-ok").on("click", (e) => {
+                //let mode = $("input[name='agent-mode']").val();
+                let mode = $(".mode-select-agent").val();
+                console.log(mode);
+                if (mode == 1) {
+                    let selectedItems = [];
+                    let htmlDisplay = "";
+                    $("input[name='is-selected']").each((i, item) => {
+                        let self = $(item);
+                        if (self.is(':checked')) {
+                            let parent = self.closest('tr');
+                            let selectedItem = {
+                                id: parent.data('id'),
+                                name: parent.find('td.agent-name').html(),
+                                isRoot: parent.find('input.is-root').is(':checked')
+                            };
+                            selectedItems.push(selectedItem);
+                            htmlDisplay += `<div>${selectedItem.name}</div><input name="AgentId" type="hidden" value="${selectedItem.id}" />`;
+                            if (selectedItem.isRoot) {
+                                htmlDisplay += `<input name="IsRoot" type="hidden" value="${selectedItem.id}" />`;
+                            }
+
+                            $("#AgentModel").modal("hide");
+                            $("#CreateModal").modal("show");
+                        }
+                    });
+
+                    $('#display-agents').html(htmlDisplay);
+                } else {
+                    let htmlDisplay = "";
+                    e.preventDefault();
+                    $.post('/Admin/SpecifyAgent', $('form').serialize(), function (data) {
+                        console.log(data);
+                        
+                        htmlDisplay += `<div>${data.agentNew.agentName}></div><input name="AgentId" type="hidden" value="${data.agentNew.id}" />`;
+                        if (data.isRoot) {
+                            htmlDisplay += `<input name="IsRoot" type="hidden" value="${data.agentNew.id}" />`;
+                        }
+                        $("#AgentModel").modal("hide");
+                        $("#CreateModal").modal("show");
+                        $('#display-agents').html(htmlDisplay);
+                    });
+                }
+            });
+
             $(".edit-admin").click(function (e) {
                 $.ajax({
                     url: "/Admin/Edit",
@@ -192,12 +269,12 @@
             $("#create-admins-form").submit(() => {
                 $("#validate_UserName").html("");
                 $("#validate_Password").html("");
-                $("#validate_Name").html("");
+                $("#validate_Email").html("");
 
                 let valid = true;
                 let username = $("#UserName").val();
                 let matkhau = $("#Password").val();
-                let hoten = $("#Name").val();
+                let email = $("#Email").val();
 
                 if (username == "") {
                     $("#validate_UserName").html("Username không hợp lệ!");
@@ -209,8 +286,8 @@
                     valid = false;
                 }
 
-                if (hoten == "") {
-                    $("#validate_Name").html("Name không hợp lệ!");
+                if (email == "") {
+                    $("#validate_Email").html("Email không hợp lệ!");
                     valid = false;
                 }
 

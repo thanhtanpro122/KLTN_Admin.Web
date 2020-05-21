@@ -37,6 +37,10 @@ namespace KLTN_Admin.Web
             });
 
             services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<IVehicleService, VehicleService>();
+            services.AddScoped<IRouteService, RouteService>();
+            services.AddScoped<IAgentService, AgentService>();
 
             services.AddAutoMapper(typeof(Startup));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -57,14 +61,14 @@ namespace KLTN_Admin.Web
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Admin}/{action=Index}/{id?}");
+                    template: "{controller=Dashboard}/{action=Login}/{id?}");
             });
+            app.UseCookiePolicy();
         }
     }
 }

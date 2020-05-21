@@ -16,10 +16,10 @@ namespace KLTN_Admin.SharedModels
         [JsonProperty("password")]
         public string Password { get; set; }
 
-        [JsonProperty("name")]
-        public string Name { get; set; }
+        [JsonProperty("email")]
+        public string Email { get; set; }
 
-        [JsonProperty("status")]
-        public int Status { get; set; }
+        [JsonProperty("admintype")]
+        public int AdminType { get; set; }
     }
 }
