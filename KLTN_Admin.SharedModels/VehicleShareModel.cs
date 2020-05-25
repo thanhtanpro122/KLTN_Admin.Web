@@ -16,8 +16,8 @@ namespace KLTN_Admin.SharedModels
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("numberSeats")]
-        public string NumberSeats { get; set; }
+        [JsonProperty("totalSeats")]
+        public string TotalSeats { get; set; }
 
         [JsonProperty("licensePlates")]
         public string LicensePlates { get; set; }

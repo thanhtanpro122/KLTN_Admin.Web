@@ -28,7 +28,7 @@ namespace KLTN_Admin.Services
             request.AddUrlSegment("admin_id", adminId);
             var response = _client.Execute(request);
             var statusCode = (int)response.StatusCode;
-            if(statusCode != 200)
+            if (statusCode != 200)
             {
                 return null;
             }
@@ -86,19 +86,26 @@ namespace KLTN_Admin.Services
             return true;
         }
 
-        public string Signin(string textusername, string textpassword)
+        public string[] Signin(string textusername, string textpassword)
         {
             var token = "";
+            var adminid = "";
             var request = new RestRequest("/admin/signin", Method.POST, DataFormat.Json);
-            request.AddJsonBody(new { username= textusername , password = textpassword });
+            request.AddJsonBody(new { username = textusername, password = textpassword });
             var response = _client.Execute(request);
             var resJson = JsonConvert.DeserializeObject<dynamic>(response.Content);
             var statusCode = (int)response.StatusCode;
             if (statusCode == 200)
             {
                 token = resJson.token;
+                adminid = resJson.id;
+                var test = new string[]
+                {
+                    token,adminid
+                };
+                return test;
             }
-            return token;
+            return null;
         }
 
         public bool CreateManagement(ManagementSharedModel management)
@@ -116,16 +123,18 @@ namespace KLTN_Admin.Services
 
         public List<ManagementSharedModel> GetManagementByAgentId(string agentId)
         {
-            var request = new RestRequest("/managementadmin/checkagent", Method.GET, DataFormat.Json);
-            request.AddJsonBody(new { agent = agentId });
+            var request = new RestRequest("/management/managementlistbyAgent/{agent_id}", Method.GET, DataFormat.Json);
+            request.AddUrlSegment("agent_id", agentId);
+            //request.AddJsonBody(new{ admin = adminId });
             var response = _client.Execute(request);
             return JsonConvert.DeserializeObject<List<ManagementSharedModel>>(response.Content);
         }
 
         public List<ManagementSharedModel> GetManagementByAdminId(string adminId)
         {
-            var request = new RestRequest("/managementadmin/checkadmin", Method.GET, DataFormat.Json);
-            request.AddJsonBody(new { admin = adminId });
+            var request = new RestRequest("/management/managementlistbyAdmin/{admin_id}", Method.GET, DataFormat.Json);
+            request.AddUrlSegment("admin_id", adminId);
+            //request.AddJsonBody(new{ admin = adminId });
             var response = _client.Execute(request);
             return JsonConvert.DeserializeObject<List<ManagementSharedModel>>(response.Content);
         }

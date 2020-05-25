@@ -43,7 +43,7 @@
                                 <i class="mdi mdi-cached mr-2 text-success"></i>
                                 Change PassWord
                             </a>
-                            <a class="dropdown-item confirm_logout" href="/admin/dashboard/logout">
+                            <a class="dropdown-item confirm_logout" href="/Dashboard/logout">
                                 <i class="mdi mdi-logout mr-2 text-primary"></i>
                                 Signout
                             </a>
@@ -101,15 +101,15 @@
                         </a>
                     </li>
                     <li class="nav-item @((string)ViewData["Page"] == "NhaXe" ? "active" : "")">
-                        <a class="nav-link" href="/Admin/TuyenXe/Index">
-                            <i class="mdi mdi-swap-horizontal menu-icon"></i>
-                            <span class="menu-title">Quản lí nhà xe</span>
+                        <a class="nav-link" href="/Agent/Index">
+                            <i class="mdi mdi-store menu-icon"></i>
+                            <span class="menu-title">Nhà xe</span>
                         </a>
                     </li>
                     <li class="nav-item @((string)ViewData["Page"] == "Xe" ? "active" : "")">
-                        <a class="nav-link" href="/Admin/Xe/Index">
+                        <a class="nav-link" href="/Vehicle/Index">
                             <i class="mdi mdi-car menu-icon"></i>
-                            <span class="menu-title">Quản lí Xe</span>
+                            <span class="menu-title">Xe</span>
                         </a>
                     </li>
                 </ul>
@@ -148,7 +148,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                @using (Html.BeginForm("ChangePassword", "DashBoard", FormMethod.Post, new { id = "change-pass-form" }))
+                @using (Html.BeginForm("ChangePassword", "Dashboard", FormMethod.Post, new { id = "change-pass-form" }))
                 {
                     @Html.AntiForgeryToken()
                     <span id="summary-validate" class="text-center text-danger"></span>
@@ -215,7 +215,7 @@
 
                 if (valid) {
                     $.ajax({
-                        url: "/Admin/DashBoard/ChangePassword",
+                        url: "Dashboard/ChangePassword",
                         data: {
                             passold: $("#password_old").val(),
                             passnew: $("#password_new").val()

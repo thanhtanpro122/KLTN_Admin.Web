@@ -24,21 +24,13 @@ namespace KLTN_Admin.Web.Controllers
         }
         public IActionResult Login()
         {
-            var username = Request.Cookies["Username"];
-            var password = Request.Cookies["Password"];
-            var isAdmin = Request.Cookies["IsAdmin"];
-            if (string.IsNullOrEmpty(username) && string.IsNullOrEmpty(password))
+            var username = Request.Cookies["UserName"];
+            var adminType = Request.Cookies["AdminType"];
+            var adminId = Request.Cookies["AdminId"];
+            var token = Request.Cookies["Token"];
+            if (string.IsNullOrEmpty(adminId) && string.IsNullOrEmpty(token))
             {
                 return View();
-            }
-
-            if(isAdmin == "0")
-            {
-
-            }
-            else
-            {
-                var token = _adminService.Signin(username, password);
             }
             return RedirectToAction("Index");
         }
@@ -46,8 +38,8 @@ namespace KLTN_Admin.Web.Controllers
         [HttpPost]
         public IActionResult Login(AdminViewModel admin)
         {
-            var token = _adminService.Signin(admin.UserName, admin.Password);
-            if (string.IsNullOrEmpty(token))
+            var data = _adminService.Signin(admin.UserName, admin.Password);
+            if (string.IsNullOrEmpty(data[0]))
             {
                 TempData["Mesage"] = "";
                 return RedirectToAction("Login");
@@ -61,9 +53,23 @@ namespace KLTN_Admin.Web.Controllers
 
             Response.Cookies.Append("UserName", admin.UserName, options);
             Response.Cookies.Append("AdminType", admin.AdminType.ToString(), options);
-            Response.Cookies.Append("Token", token, options);
-
+            Response.Cookies.Append("Token", data[0], options);
+            Response.Cookies.Append("AdminId", data[1], options);
             return RedirectToAction("Index");
+        }
+
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("UserName");
+            Response.Cookies.Delete("AdminType");
+            Response.Cookies.Delete("Token");
+            Response.Cookies.Delete("AdminId");
+            return RedirectToAction("Login");
+        }
+
+        public ActionResult ChangePassword(string passold, string passnew)
+        {
+            return Json(null);
         }
 
     }

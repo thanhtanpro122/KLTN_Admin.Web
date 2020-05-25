@@ -21,5 +21,9 @@ namespace KLTN_Admin.Web.ViewModels
 
         public string[] IsRoot { get; set; }
 
+        public string[] AgentName { get; set; }
+
+        public string[] RootAgent { get; set; }
+
     }
 }

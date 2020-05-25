@@ -10,18 +10,17 @@ using X.PagedList;
 
 namespace KLTN_Admin.Web.Controllers
 {
-    public class VehicleController : BaseController
+    public class AgentController : BaseController
     {
-        private readonly IVehicleService _vehicleService;
+        private readonly IAgentService _agentService;
 
-        public VehicleController(IVehicleService vehicleService, IMapper mapper) : base(mapper)
+        public AgentController(IAgentService agentService, IMapper mapper) : base(mapper)
         {
-            _vehicleService = vehicleService;
+            _agentService = agentService;
         }
-
         public IActionResult Index(string searchString, int? page)
         {
-            var model = _mapper.Map<List<VehicleViewModel>>(_vehicleService.GetListVehicle());
+            var model = _mapper.Map<List<AgentViewModel>>(_agentService.GetAllAgent());
             int pageSize = 5;
             int pageNumber = (page ?? 1);
             return View(model.ToPagedList(pageNumber, pageSize));

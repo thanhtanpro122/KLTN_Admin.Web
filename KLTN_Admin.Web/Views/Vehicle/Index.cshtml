@@ -1,0 +1,86 @@
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList
+@using X.PagedList.Mvc.Common
+@model IPagedList<VehicleViewModel>
+@{
+    ViewData["Title"] = "Vehicle";
+    ViewData["Page"] = "Vehicle";
+}
+
+<div class="row grid-margin">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Quản lí Admin</h4>
+                <div class="table-toolbar">
+                    <div>
+                        <div style="float:left;">
+                            <button class="btn btn-success" data-toggle="modal"
+                                    data-target="#CreateModal">
+                                Thêm mới
+                            </button>
+                        </div>
+                        <div style="float:right;">
+                            @using (Html.BeginForm("Index", "Vehicle", FormMethod.Post))
+                            {
+                                <input type="text" id="searchString" name="searchString" placeholder="Tìm kiếm" value="@ViewBag.searchString" class="form-control" style="width: auto; display: inline-block" />
+                                <button type="submit" id="btnTimKiem" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-search"></span> Search
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Loại xe</th>
+                            <th>Tên</th>
+                            <th>Tổng số ghế</th>
+                            <th>Biển số</th>
+                            <th>Nhà xe</th>
+                            <th>Địa điểm chạy</th>
+                            <th>Địa điểm đến</th>
+                            <th width="150">Chỉnh sửa</th>
+                            <th width="85">Xóa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td>@item.Type</td>
+                            <td>@item.Name</td>
+                            <td>@item.TotalSeats</td>
+                            <td>@item.LicensePlates</td>
+                            <td>@item.Agent</td>
+                            <td>@item.StartLocation</td>
+                            <td>@item.EndLocation</td>
+                            <td>
+                                <a href="#" class="btn btn-primary edit-admin" data-id="@item.Id">
+                                    Edit
+                                </a>
+                            </td>
+                            <td>
+                                <a asp-controller="Admin" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger delete_admin">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+                <div style="float:right;padding-top: 25px;">
+                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                    @(Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions
+                        {
+                            LiElementClasses = new string[] { "page-item" },
+                            PageClasses = new string[] { "page-link" },
+                            UlElementClasses = new string[] { "pagination rounded-flat pagination-success" }
+                        }))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

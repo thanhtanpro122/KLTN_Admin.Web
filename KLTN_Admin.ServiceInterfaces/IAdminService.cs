@@ -19,7 +19,7 @@ namespace KLTN_Admin.ServiceInterfaces
 
         bool DeleteAdmin(string adminId);
 
-        string Signin(string username, string password);
+        string[] Signin(string username, string password);
 
         bool CreateManagement(ManagementSharedModel management);
 
