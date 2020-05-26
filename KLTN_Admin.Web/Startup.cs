@@ -41,6 +41,7 @@ namespace KLTN_Admin.Web
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<IRouteService, RouteService>();
             services.AddScoped<IAgentService, AgentService>();
+            services.AddScoped<IConstService, ConstService>();
 
             services.AddAutoMapper(typeof(Startup));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
