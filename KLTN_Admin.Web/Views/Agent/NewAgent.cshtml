@@ -1,0 +1,50 @@
+﻿@model AgentAddViewModel
+
+<form method="post">
+    <div class="form-row">
+        <div class="col-8 form-group">
+            <label asp-for="AgentName"></label>
+            <input type="text" asp-for="AgentName" class="form-control" />
+        </div>
+    </div>
+
+    <label class="dynamic-text">Thông tin nhà xe đầu</label>
+    <div class="form-row">
+        <div class="col-8 form-group">
+            <label asp-for="LocationFrom"></label>
+            <input type="text" readonly asp-for="LocationFrom" class="form-control" />
+        </div>
+
+        <div class="col-4 form-group">
+            <label asp-for="PhoneFrom"></label>
+            <input type="text" readonly asp-for="PhoneFrom" class="form-control" />
+        </div>
+    </div>
+
+    <label class="dynamic-text">Thông tin nhà xe cuối</label>
+    <div class="form-row">
+        <div class="col-8 form-group">
+            <label asp-for="LocationTo"></label>
+            <input type="text" readonly asp-for="LocationTo" class="form-control" />
+        </div>
+
+        <div class="col-4 form-group">
+            <label asp-for="PhoneTo"></label>
+            <input type="text" readonly asp-for="PhoneTo" class="form-control" />
+        </div>
+    </div>
+
+    <label class="dynamic-text">Chỉ định sơ đồ ghế</label>
+    <div class="form-row btn-group-toggle" data-toggle="buttons">
+        <div class="col-5 form-group">
+            <label class="btn btn-secondary active">
+                <input type="radio" name="define-map" checked> Sử dụng sơ đồ ghế mặc định
+            </label>
+        </div>
+        <div class="col-5 form-group">
+            <label class="btn btn-secondary">
+                <input type="radio" name="define-map"> Định nghĩa sơ đồ ghế mới
+            </label>
+        </div>
+    </div>
+</form>

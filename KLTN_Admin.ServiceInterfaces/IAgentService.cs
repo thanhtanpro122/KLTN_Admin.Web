@@ -16,5 +16,7 @@ namespace KLTN_Admin.ServiceInterfaces
         bool EditAgent(AgentSharedModel agent);
 
         bool DeleteAgent(string agentId);
+
+        AddtionalAgentShardeModel GetAddtionlAgentData();
     }
 }

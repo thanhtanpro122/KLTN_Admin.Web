@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace KLTN_Admin.Services
@@ -46,6 +47,18 @@ namespace KLTN_Admin.Services
                 return false;
             }
             return true;
+        }
+
+        public AddtionalAgentShardeModel GetAddtionlAgentData()
+        {
+            var request = new RestRequest("/agent/addAgentData", Method.GET);
+            var response = _client.Execute(request);
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return JsonConvert.DeserializeObject<AddtionalAgentShardeModel>(response.Content);
+            }
+
+            return null;
         }
 
         public AgentSharedModel GetAgentById(string agentId)

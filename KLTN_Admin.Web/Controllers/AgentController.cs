@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using KLTN_Admin.Common.Consts;
 using KLTN_Admin.ServiceInterfaces;
 using KLTN_Admin.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,34 @@ namespace KLTN_Admin.Web.Controllers
             int pageSize = 5;
             int pageNumber = (page ?? 1);
             return View(model.ToPagedList(pageNumber, pageSize));
+        }
+
+        [HttpGet]
+        public IActionResult NewAgent()
+        {
+            AttachAddtionalDataToView();
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult NewAgent(AgentAddViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+
+            }
+
+            AttachAddtionalDataToView();
+            return View();
+        }
+
+        private void AttachAddtionalDataToView()
+        {
+            var addtionalAgentData = _agentService.GetAddtionlAgentData();
+
+            ViewBag.DefaultMaps = addtionalAgentData.DefaultMaps;
+            ViewBag.VehicleTypes = addtionalAgentData.VehicleAndOrderTypes.Where(e => e.Type == Consts.LoaiXe);
+            ViewBag.OrderTypes = addtionalAgentData.VehicleAndOrderTypes.Where(e => e.Type == Consts.KieuXepLoaiDanhSo);
         }
     }
 }
