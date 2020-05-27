@@ -11,7 +11,7 @@ namespace KLTN_Admin.SharedModels
         public string Id { get; set; }
 
         [JsonProperty("type")]
-        public ConstShareModel Type { get; set; }
+        public ConstSharedModel Type { get; set; }
 
         [JsonProperty("width")]
         public int Width { get; set; }

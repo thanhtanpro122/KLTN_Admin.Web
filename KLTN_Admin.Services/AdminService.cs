@@ -138,5 +138,11 @@ namespace KLTN_Admin.Services
             var response = _client.Execute(request);
             return JsonConvert.DeserializeObject<List<ManagementSharedModel>>(response.Content);
         }
+
+        public List<ManagementSharedModel> GetAllManagement()
+        {
+            var request = new RestRequest("/managementadmin", Method.GET);
+            return _client.Execute<List<ManagementSharedModel>>(request).Data;
+        }
     }
 }

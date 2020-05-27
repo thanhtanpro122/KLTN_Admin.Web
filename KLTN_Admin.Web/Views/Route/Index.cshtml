@@ -53,7 +53,7 @@
                             <th>Tuyến xe</th>
                             <th>Thời gian chạy</th>
                             <th>Xe</th>
-                            @*<th>Chỗ ngồi</th>*@
+                            <th>Nhà xe</th>
                             <th>Đổi trạng thái</th>
                             <th>Chỉnh sửa</th>
                             <th>Xóa</th>
@@ -62,7 +62,7 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            var tuyen = item.StartLocationString + "->" + item.EndLocationString;
+                            var tuyen = item.StartLocation.Address + "->" + item.EndLocation.Address;
                             var thoigian = item.StartTime + "-" + item.EndTime;
 
                             <tr>
@@ -70,13 +70,8 @@
                                 <td>@item.DepartureDate.ToString("dd/MM/yyyy")</td>
                                 <td>@tuyen</td>
                                 <td>@thoigian</td>
-                                <td>@item.NameVehicle</td>
-                                @*<td>
-                                        <p>
-                                            @item.TinhTrang / @item.TongGhe
-                                        </p>
-                                    </td>*@
-
+                                <td>@item.Vehicle.Name</td>
+                                <td>@item.VehicleAgent.Name</td>
                                 <td>
                                     @if (item.Status == 0)
                                     {
@@ -164,7 +159,7 @@
                         </div>*@
                     <div class="form-group">
                         <label for="exampleInputPassword4">Chọn xe</label>
-                        <input type="text" id="vehicleId_create" name="Vehicle" hidden />
+                        <input type="text" id="vehicleId_create" name="VehicleId" hidden />
                         <input type="text" class="form-control" id="vehicle_create" name="xe" placeholder="Chọn xe">
                         <span id="validate_xe" class="text-danger"></span>
                     </div>
@@ -227,7 +222,7 @@
 
                     <div class="form-group">
                         <label for="exampleInputPassword4">Chọn xe</label>
-                        <input type="text" id="vehicleId_edit" name="Vehicle" hidden />
+                        <input type="text" id="vehicleId_edit" name="VehicleId" hidden />
                         <input type="text" class="form-control" id="vehicle_edit" name="xe" placeholder="Chọn xe">
                         <span id="validate_xe" class="text-danger"></span>
                     </div>
@@ -405,8 +400,8 @@
                         console.log(data);
                         $("#route_id").val(data.id);
                         $("#DepartureDate_Edit").val(data.departureDate);
-                        $("#vehicle_edit").val(data.licensePlates);
-                        $("#vehicleId_edit").val(data.vehicle);
+                        $("#vehicle_edit").val(data.vehicle.licensePlates);
+                        $("#vehicleId_edit").val(data.vehicle.id);
                         $("#price_edit").val(data.price);
                         $("#StartTime_Edit").val(data.startTime);
                         $("#EndTime_Edit").val(data.endTime);

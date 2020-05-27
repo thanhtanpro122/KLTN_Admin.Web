@@ -11,7 +11,7 @@ namespace KLTN_Admin.SharedModels
         public string Id { get; set; }
 
         [JsonProperty("vehicle")]
-        public string Vehicle { get; set; }
+        public VehicleShareModel Vehicle { get; set; }
 
         [JsonProperty("startTime")]
         public string StartTime { get; set; }
@@ -20,10 +20,10 @@ namespace KLTN_Admin.SharedModels
         public string EndTime { get; set; }
 
         [JsonProperty("startLocation")]
-        public string StartLocation { get; set; }
+        public LocationSharedModel StartLocation { get; set; }
 
         [JsonProperty("endLocation")]
-        public string EndLocation { get; set; }
+        public LocationSharedModel EndLocation { get; set; }
 
         [JsonProperty("status")]
         public int Status { get; set; }

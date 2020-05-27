@@ -11,10 +11,10 @@ namespace KLTN_Admin.SharedModels
         public string Id { get; set; }
 
         [JsonProperty("agent")]
-        public string Agent { get; set; }
+        public AgentSharedModel Agent { get; set; }
 
         [JsonProperty("admin")]
-        public string Admin { get; set; }
+        public AdminSharedModel Admin { get; set; }
 
         [JsonProperty("isCreator")]
         public string IsCreator { get; set; }

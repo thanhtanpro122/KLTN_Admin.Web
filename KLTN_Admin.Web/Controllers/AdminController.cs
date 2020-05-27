@@ -34,23 +34,24 @@ namespace KLTN_Admin.Web.Controllers
             {
                 model.Remove(adminLogin);
             }
-            foreach(var item in model)
+            var listManagement = _mapper.Map<List<ManagementViewModel>>(_adminService.GetAllManagement());
+            foreach (var item in model)
             {
-                var listManagement = _mapper.Map<List<ManagementViewModel>>(_adminService.GetManagementByAdminId(item.Id));
                 var agentNames = new List<string>();
                 var agentRoot = new List<string>();
-                if (listManagement != null)
+
+                foreach(var management in listManagement)
                 {
-                    foreach (var management in listManagement)
+                    if(item.Id == management.AdminId)
                     {
-                        var agent = _mapper.Map<AgentViewModel>(_agentService.GetAgentById(management.Agent));
+                        agentNames.Add(management.AgentName);
                         if (management.Isroot)
                         {
-                            agentRoot.Add(agent.AgentName);
+                            agentRoot.Add(management.AgentName);
                         }
-                        agentNames.Add(agent.AgentName);
                     }
                 }
+
                 item.AgentName = agentNames.ToArray();
                 item.RootAgent = agentRoot.ToArray();
             }
@@ -83,10 +84,10 @@ namespace KLTN_Admin.Web.Controllers
             {
                 var management = new ManagementViewModel()
                 {
-                    Agent = item,
+                    AgentId = item,
                     IsCreator = Request.Cookies["AdminId"],
                     Isroot = false,
-                    Admin = adminNew.Id
+                    AdminId = adminNew.Id
                 };
                 foreach(var isroot in admin.IsRoot)
                 {
@@ -120,12 +121,12 @@ namespace KLTN_Admin.Web.Controllers
             {
                 foreach (var management in listManagement)
                 {
-                    var agent = _mapper.Map<AgentViewModel>(_agentService.GetAgentById(management.Agent));
+                    //var agent = _mapper.Map<AgentViewModel>(_agentService.GetAgentById(management.Agent));
                     if (management.Isroot)
                     {
-                        agentRoot.Add(agent.AgentName);
+                        agentRoot.Add(management.AgentName);
                     }
-                    agentNames.Add(agent.AgentName);
+                    agentNames.Add(management.AgentName);
                 }
             }
             admin.AgentName = agentNames.ToArray();

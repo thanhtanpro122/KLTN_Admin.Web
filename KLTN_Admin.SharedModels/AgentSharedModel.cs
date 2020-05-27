@@ -11,7 +11,7 @@ namespace KLTN_Admin.SharedModels
         public string Id { get; set; }
 
         [JsonProperty("name")]
-        public string AgentName { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("cancelfee")]
         public int CancelFee { get; set; }

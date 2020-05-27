@@ -18,12 +18,12 @@ namespace KLTN_Admin.Web.ViewModels
         
         public string LicensePlates { get; set; }
         
-        public string StartLocation { get; set; }
+        public LocationViewModel StartLocation { get; set; }
         
-        public string EndLocation { get; set; }
+        public LocationViewModel EndLocation { get; set; }
         
         public int Status { get; set; }
         
-        public string Agent { get; set; }
+        public AgentViewModel Agent { get; set; }
     }
 }

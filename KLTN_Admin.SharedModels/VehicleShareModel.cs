@@ -23,15 +23,15 @@ namespace KLTN_Admin.SharedModels
         public string LicensePlates { get; set; }
 
         [JsonProperty("startLocation")]
-        public string StartLocation { get; set; }
+        public LocationSharedModel StartLocation { get; set; }
 
         [JsonProperty("endLocation")]
-        public string EndLocation { get; set; }
+        public LocationSharedModel EndLocation { get; set; }
 
         [JsonProperty("status")]
         public int Status { get; set; }
 
         [JsonProperty("agent")]
-        public string Agent { get; set; }
+        public AgentSharedModel Agent { get; set; }
     }
 }

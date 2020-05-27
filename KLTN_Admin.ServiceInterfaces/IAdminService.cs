@@ -21,6 +21,8 @@ namespace KLTN_Admin.ServiceInterfaces
 
         string[] Signin(string username, string password);
 
+        List<ManagementSharedModel> GetAllManagement();
+
         bool CreateManagement(ManagementSharedModel management);
 
         List<ManagementSharedModel> GetManagementByAgentId(string agentId);

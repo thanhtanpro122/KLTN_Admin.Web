@@ -27,31 +27,16 @@ namespace KLTN_Admin.Web.Controllers
         }
         public IActionResult Index(string agentId, string vehicleId, DateTime startDate, int? page)
         {
-            var routes = _mapper.Map<List<RouteViewModel>>(_routeService.GetListRoute());
-
-            foreach(var item in routes)
-            {
-                if(item.StartLocation != null || item.EndLocation != null)
-                {
-                    item.StartLocationString = _locationService.GetLocationById(item.StartLocation).Address;
-                    item.EndLocationString = _locationService.GetLocationById(item.EndLocation).Address;
-                }
-                if (item.Vehicle != null)
-                {
-                    var vehicle = _vehicleService.GetVehicleById(item.Vehicle);
-                    item.NameVehicle = vehicle.Name;
-                    item.Agent = vehicle.Agent;
-                }
-            }
+            var routes = _mapper.Map<List<RouteViewModel>>(_routeService.GetListRoute());          
             if (agentId != null)
             {
                 page = 1;
-                routes = routes.Where(x => x.Agent == agentId).ToList();
+                routes = routes.Where(x => x.VehicleAgent.Id == agentId).ToList();
             }
             if (vehicleId != null)
             {
                 page = 1;
-                routes = routes.Where(x => x.Vehicle == vehicleId).ToList();
+                routes = routes.Where(x => x.Vehicle.Id == vehicleId).ToList();
             }
             var datevalid = new DateTime(0001, 1, 1);
             if (startDate.Date != datevalid)
@@ -86,13 +71,26 @@ namespace KLTN_Admin.Web.Controllers
         {
             route.DepartureDate = route.DepartureDate.Date;
             route.Status = 0;
-            var vehicle = _vehicleService.GetVehicleById(route.Vehicle);
+            var vehicle = _vehicleService.GetVehicleById(route.VehicleId);
             if (vehicle == null)
             {
                 return NotFound();
             }
-            route.StartLocation = vehicle.StartLocation;
-            route.EndLocation = vehicle.EndLocation;
+
+            route.StartLocation = new LocationViewModel()
+            {
+                Id = vehicle.StartLocation.Id
+            };
+            route.EndLocation = new LocationViewModel()
+            {
+                Id = vehicle.EndLocation.Id
+            };
+            //route.StartLocation.Id = vehicle.StartLocation.Id;
+            //route.EndLocation.Id = vehicle.EndLocation.Id;
+            route.Vehicle = new VehicleViewModel()
+            {
+                Id = vehicle.Id
+            };
 
 
             var flag = _routeService.CreateRoute(_mapper.Map<RouteSharedModel>(route));
@@ -115,26 +113,26 @@ namespace KLTN_Admin.Web.Controllers
             {
                 return NotFound();
             }
-            if (route.Vehicle != null)
-            {
-                var vehicle = _vehicleService.GetVehicleById(route.Vehicle);
-                route.NameVehicle = vehicle.Name;
-                route.Agent = vehicle.Agent;
-                route.LicensePlates = vehicle.LicensePlates;
-            }
+            //if (route.Vehicle != null)
+            //{
+            //    var vehicle = _vehicleService.GetVehicleById(route.Vehicle.Id);
+            //    //route.NameVehicle = vehicle.Name;
+            //    //route.Agent = vehicle.Agent;
+            //    //route.LicensePlates = vehicle.LicensePlates;
+            //}
             return Json(route);
         }
         [HttpPost]
         public IActionResult Edit(RouteViewModel route)
         {
             route.DepartureDate = route.DepartureDate.Date;
-            var vehicle = _vehicleService.GetVehicleById(route.Vehicle);
+            var vehicle = _vehicleService.GetVehicleById(route.Vehicle.Id);
             if (vehicle == null)
             {
                 return NotFound();
             }
-            route.StartLocation = vehicle.StartLocation;
-            route.EndLocation = vehicle.EndLocation;
+            //route.StartLocation = vehicle.StartLocation;
+            //route.EndLocation = vehicle.EndLocation;
 
             var flag = _routeService.EditRoute(_mapper.Map<RouteSharedModel>(route));
             if (!flag)

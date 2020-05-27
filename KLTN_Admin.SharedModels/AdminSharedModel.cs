@@ -20,6 +20,6 @@ namespace KLTN_Admin.SharedModels
         public string Email { get; set; }
 
         [JsonProperty("admintype")]
-        public int AdminType { get; set; }
+        public int Type { get; set; }
     }
 }

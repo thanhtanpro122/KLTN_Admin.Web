@@ -9,29 +9,23 @@ namespace KLTN_Admin.Web.ViewModels
     {
         public string Id { get; set; }
         
-        public string Vehicle { get; set; }
+        public VehicleViewModel Vehicle { get; set; }
 
-        public string NameVehicle { get; set; }
+        public string VehicleId { get; set; }
 
-        public string TypeVehicle { get; set; }
+        public AgentViewModel VehicleAgent { get; set; }
 
-        public string LicensePlates { get; set; }
+        public LocationViewModel VehicleStartLocation { get; set; }
 
-        public string Agent { get; set; }
-
-        public string NameAgent { get; set; }
-
+        public LocationViewModel VehicleEndLocation { get; set; }
+        
         public string StartTime { get; set; }
         
         public string EndTime { get; set; }
         
-        public string StartLocation { get; set; }
+        public LocationViewModel StartLocation { get; set; }
         
-        public string EndLocation { get; set; }
-
-        public string StartLocationString { get; set; }
-
-        public string EndLocationString { get; set; }
+        public LocationViewModel EndLocation { get; set; }    
 
         public int Status { get; set; }
         
