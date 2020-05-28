@@ -62,10 +62,6 @@
 
 
         $(document).ready(function () {
-            $("#search_input").change(function () {
-                alert("The text has been changed.");
-            });
-
             var autocomplete;
             autocomplete = new google.maps.places.Autocomplete((document.getElementById(searchInput)), {
                 types: ['geocode'],
