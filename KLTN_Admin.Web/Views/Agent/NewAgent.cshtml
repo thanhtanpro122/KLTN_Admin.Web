@@ -1,50 +1,135 @@
 ﻿@model AgentAddViewModel
+@{ 
+    var orderTypes = (IEnumerable<ConstSharedModel>)ViewBag.OrderTypes;
+}
 
-<form method="post">
-    <div class="form-row">
-        <div class="col-8 form-group">
-            <label asp-for="Name"></label>
-            <input type="text" asp-for="Name" class="form-control" />
-        </div>
-    </div>
+@section Styles {
+    <style>
+        .map td {
+            padding: 4px;
+        }
+    </style>
+}
 
-    <label class="dynamic-text">Thông tin nhà xe đầu</label>
-    <div class="form-row">
-        <div class="col-8 form-group">
-            <label asp-for="LocationFrom"></label>
-            <input type="text" readonly asp-for="LocationFrom" class="form-control" />
-        </div>
-
-        <div class="col-4 form-group">
-            <label asp-for="PhoneFrom"></label>
-            <input type="text" readonly asp-for="PhoneFrom" class="form-control" />
-        </div>
-    </div>
-
-    <label class="dynamic-text">Thông tin nhà xe cuối</label>
-    <div class="form-row">
-        <div class="col-8 form-group">
-            <label asp-for="LocationTo"></label>
-            <input type="text" readonly asp-for="LocationTo" class="form-control" />
+<div class="container">
+    <form method="post">
+        <div class="form-row">
+            <div class="col-8 form-group">
+                <label asp-for="Name"></label>
+                <input type="text" asp-for="Name" class="form-control" />
+            </div>
         </div>
 
-        <div class="col-4 form-group">
-            <label asp-for="PhoneTo"></label>
-            <input type="text" readonly asp-for="PhoneTo" class="form-control" />
-        </div>
-    </div>
+        <label class="dynamic-text">Thông tin nhà xe đầu</label>
+        <div class="form-row">
+            <div class="col-8 form-group">
+                <label asp-for="LocationFrom"></label>
+                <input type="text" readonly asp-for="LocationFrom" class="form-control" />
+            </div>
 
-    <label class="dynamic-text">Chỉ định sơ đồ ghế</label>
-    <div class="form-row btn-group-toggle" data-toggle="buttons">
-        <div class="col-5 form-group">
-            <label class="btn btn-secondary active">
-                <input type="radio" name="define-map" checked> Sử dụng sơ đồ ghế mặc định
-            </label>
+            <div class="col-4 form-group">
+                <label asp-for="PhoneFrom"></label>
+                <input type="text" readonly asp-for="PhoneFrom" class="form-control" />
+            </div>
         </div>
-        <div class="col-5 form-group">
-            <label class="btn btn-secondary">
-                <input type="radio" name="define-map"> Định nghĩa sơ đồ ghế mới
-            </label>
+
+        <label class="dynamic-text">Thông tin nhà xe cuối</label>
+        <div class="form-row">
+            <div class="col-8 form-group">
+                <label asp-for="LocationTo"></label>
+                <input type="text" readonly asp-for="LocationTo" class="form-control" />
+            </div>
+
+            <div class="col-4 form-group">
+                <label asp-for="PhoneTo"></label>
+                <input type="text" readonly asp-for="PhoneTo" class="form-control" />
+            </div>
         </div>
-    </div>
-</form>
+
+        <label class="dynamic-text">Chỉ định sơ đồ ghế</label><br />
+        <label>Cho xe thường</label>
+        <input type="hidden" asp-for="MapTypeXeThuong" />
+
+        <div class="form-row">
+            <div class="col form-group">
+                <label asp-for="MapWidthXeThuong"></label>
+                <input type="number" asp-for="MapWidthXeThuong" class="form-control" />
+            </div>
+
+            <div class="col form-group">
+                <label asp-for="MapHeightXeThuong"></label>
+                <input type="number" asp-for="MapHeightXeThuong" class="form-control" />
+            </div>
+
+            <div class="col form-group">
+                <label asp-for="OrderTypeXeThuong"></label>
+                <select asp-for="OrderTypeXeThuong" class="form-control">
+                    @foreach (var item in orderTypes)
+                    {
+                        <option value="@item.Id" data-value="@item.Value">@item.DisplayValue</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <input type="button" id="review-map-xe-thuong" class="btn btn-warning" />
+        <div id="review">
+
+        </div>
+
+        <label>Cho xe giường</label>
+        <input type="hidden" asp-for="MapTypeXeGiuong" />
+
+        <div class="form-row">
+            <div class="col form-group">
+                <label asp-for="MapWidthXeGiuong"></label>
+                <input type="number" asp-for="MapWidthXeGiuong" class="form-control" />
+            </div>
+
+            <div class="col form-group">
+                <label asp-for="MapHeightXeGiuong"></label>
+                <input type="number" asp-for="MapHeightXeGiuong" class="form-control" />
+            </div>
+
+            <div class="col form-group">
+                <label asp-for="OrderTypeXeGiuong"></label>
+                <select asp-for="OrderTypeXeGiuong" class="form-control">
+                    @foreach (var item in orderTypes)
+                    {
+                        <option value="@item.Id" data-value="@item.Value">@item.DisplayValue</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <input type="submit" class="btn btn-primary" value="Thêm nhà xe" />
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        function veTraiQuaPhai(width, height) {
+            let count = 1;
+            let html = '<table>';
+            for (let i = 1; i <= height; i++) {
+                html += "<tr>";
+                for (let j = 1; j <= width; j++) {
+                    html += `<td>${count++}</td>`;
+                }
+                html += "</tr>";
+            }
+            html += "</table>";
+
+            return html;
+        }
+
+        $("#review-map-xe-thuong").on("click", () => {
+            let width = $("#MapWidthXeThuong").val();
+            let height = $("#MapHeightXeThuong").val();
+            let orderType = $("#OrderTypeXeThuong").children("option:selected").data("value");
+
+            if (orderType === '@ConstValues.KieuXepLoaiDanhSo.TraiSangPhai') {
+                $("#review").html(veTraiQuaPhai(width, height));
+            }
+        });
+    </script>
+}

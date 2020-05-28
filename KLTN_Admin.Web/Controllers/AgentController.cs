@@ -49,10 +49,7 @@ namespace KLTN_Admin.Web.Controllers
         private void AttachAddtionalDataToView()
         {
             var addtionalAgentData = _agentService.GetAddtionlAgentData();
-
-            ViewBag.DefaultMaps = addtionalAgentData.DefaultMaps;
-            ViewBag.VehicleTypes = addtionalAgentData.VehicleAndOrderTypes.Where(e => e.Type == Consts.LoaiXe);
-            ViewBag.OrderTypes = addtionalAgentData.VehicleAndOrderTypes.Where(e => e.Type == Consts.KieuXepLoaiDanhSo);
+            ViewBag.OrderTypes = addtionalAgentData.OrderTypes.Where(e => e.Type == Consts.KieuXepLoaiDanhSo);
         }
     }
 }

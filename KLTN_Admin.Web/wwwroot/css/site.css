@@ -1,5 +1,9 @@
 ﻿.dynamic-text {
     margin-top: 0.5rem;
     font-weight: bold;
-    color: red;
+    color: #6d0303;
+}
+
+.map {
+    border: 1px solid red;
 }

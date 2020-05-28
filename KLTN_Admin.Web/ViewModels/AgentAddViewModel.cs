@@ -15,13 +15,21 @@ namespace KLTN_Admin.Web.ViewModels
 
         public string LocationTo { get; set; }
 
-        public string MapType { get; set; }
+        public string MapTypeXeThuong { get; set; }
 
-        public int MapWidth { get; set; }
+        public int MapWidthXeThuong { get; set; }
 
-        public int MapHeight { get; set; }
+        public int MapHeightXeThuong { get; set; }
 
-        public string OrderType { get; set; }
+        public string OrderTypeXeThuong { get; set; }
+
+        public string MapTypeXeGiuong { get; set; }
+
+        public int MapWidthXeGiuong { get; set; }
+
+        public int MapHeightXeGiuong { get; set; }
+
+        public string OrderTypeXeGiuong { get; set; }
 
         public string MapAgent { get; set; }
     }
