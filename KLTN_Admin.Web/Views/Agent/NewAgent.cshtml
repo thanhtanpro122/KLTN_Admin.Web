@@ -1,22 +1,32 @@
 ﻿@model AgentAddViewModel
-@{ 
+@{
     var orderTypes = (IEnumerable<ConstSharedModel>)ViewBag.OrderTypes;
 }
 
 @section Styles {
     <style>
         .map td {
-            padding: 4px;
+            padding: 13px;
+        }
+        .map {
+            text-align: center;
+        }
+        .btn-preview {
+            margin-top: 25px;
         }
     </style>
 }
 
 <div class="container">
-    <form method="post">
+    <form method="post" asp-controller="Agent" asp-action="NewAgent">
         <div class="form-row">
             <div class="col-8 form-group">
                 <label asp-for="Name"></label>
                 <input type="text" asp-for="Name" class="form-control" />
+            </div>
+            <div class="col-4 form-group">
+                <label asp-for="CancelFee"></label>
+                <input type="text" asp-for="CancelFee" class="form-control" />
             </div>
         </div>
 
@@ -24,12 +34,14 @@
         <div class="form-row">
             <div class="col-8 form-group">
                 <label asp-for="LocationFrom"></label>
-                <input type="text" readonly asp-for="LocationFrom" class="form-control" />
+                <input type="text" asp-for="LocationFrom" class="form-control" />
+                <input type="text" hidden asp-for="LatitudeLocationFrom" />
+                <input type="text" hidden asp-for="LongitudeLocationFrom" />
             </div>
 
             <div class="col-4 form-group">
                 <label asp-for="PhoneFrom"></label>
-                <input type="text" readonly asp-for="PhoneFrom" class="form-control" />
+                <input type="text" asp-for="PhoneFrom" class="form-control" />
             </div>
         </div>
 
@@ -37,18 +49,20 @@
         <div class="form-row">
             <div class="col-8 form-group">
                 <label asp-for="LocationTo"></label>
-                <input type="text" readonly asp-for="LocationTo" class="form-control" />
+                <input type="text" asp-for="LocationTo" class="form-control" />
+                <input type="text" hidden asp-for="LatitudeLocationTo" />
+                <input type="text" hidden asp-for="LongitudeLocationTo" />
             </div>
 
             <div class="col-4 form-group">
                 <label asp-for="PhoneTo"></label>
-                <input type="text" readonly asp-for="PhoneTo" class="form-control" />
+                <input type="text" asp-for="PhoneTo" class="form-control" />
             </div>
         </div>
 
         <label class="dynamic-text">Chỉ định sơ đồ ghế</label><br />
         <label>Cho xe thường</label>
-        <input type="hidden" asp-for="MapTypeXeThuong" />
+        <input type="hidden" asp-for="MapTypeXeThuong" value="@ViewBag.TypeXeThuong"/>
 
         <div class="form-row">
             <div class="col form-group">
@@ -70,14 +84,12 @@
                     }
                 </select>
             </div>
+            <div class="col form-group">
+                <input type="button" id="review-map-xe-thuong" class="btn btn-warning btn-preview" value="Preview"/>
+            </div>
         </div>
-        <input type="button" id="review-map-xe-thuong" class="btn btn-warning" />
-        <div id="review">
-
-        </div>
-
         <label>Cho xe giường</label>
-        <input type="hidden" asp-for="MapTypeXeGiuong" />
+        <input type="hidden" asp-for="MapTypeXeGiuong" value="@ViewBag.TypeXeGiuong" />
 
         <div class="form-row">
             <div class="col form-group">
@@ -99,17 +111,46 @@
                     }
                 </select>
             </div>
+            <div class="col form-group">
+                <input type="button" id="review-map-xe-giuong" class="btn btn-warning btn-preview" value="Preview" />
+            </div>
         </div>
-
         <input type="submit" class="btn btn-primary" value="Thêm nhà xe" />
     </form>
 </div>
 
+<div class="modal fade" id="MapModal" tabindex="-1" role="dialog" 
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sơ đồ đánh số</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" >
+                <div class="form-group" id="review">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
-    <script>
+    <script type="text/javascript">
+        var locationFrom = 'LocationFrom';
+        var locationTo = 'LocationTo';
+
+        var autocompleteLocationFrom, autocompleteLocationTo;
+
+
         function veTraiQuaPhai(width, height) {
             let count = 1;
-            let html = '<table>';
+            let html = '<table class="map">';
             for (let i = 1; i <= height; i++) {
                 html += "<tr>";
                 for (let j = 1; j <= width; j++) {
@@ -130,6 +171,43 @@
             if (orderType === '@ConstValues.KieuXepLoaiDanhSo.TraiSangPhai') {
                 $("#review").html(veTraiQuaPhai(width, height));
             }
+
+            $("#MapModal").modal("show");
+        });
+
+        $("#review-map-xe-giuong").on("click", () => {
+            let width = $("#MapWidthXeGiuong").val();
+            let height = $("#MapWidthXeGiuong").val();
+            let orderType = $("#OrderTypeXeGiuong").children("option:selected").data("value");
+
+            if (orderType === '@ConstValues.KieuXepLoaiDanhSo.TraiSangPhai') {
+                $("#review").html(veTraiQuaPhai(width, height));
+            }
+
+            $("#MapModal").modal("show");
+        });
+
+         $(document).ready(function () {
+             autocompleteLocationFrom = new google.maps.places.Autocomplete((document.getElementById(locationFrom)), {
+                types: ['geocode']
+            });
+
+             google.maps.event.addListener(autocompleteLocationFrom, 'place_changed', function () {
+                 var palce = autocompleteLocationFrom.getPlace();
+                 document.getElementById('LatitudeLocationFrom').value = palce.geometry.location.lat();
+                 document.getElementById('LongitudeLocationFrom').value = palce.geometry.location.lng();
+             });
+
+
+             autocompleteLocationTo = new google.maps.places.Autocomplete((document.getElementById(locationTo)), {
+                 types: ['geocode']
+             });
+
+             google.maps.event.addListener(autocompleteLocationTo, 'place_changed', function () {
+                 var palce = autocompleteLocationTo.getPlace();
+                 document.getElementById('LatitudeLocationTo').value = palce.geometry.location.lat();
+                 document.getElementById('LongitudeLocationTo').value = palce.geometry.location.lng();
+             });
         });
     </script>
 }

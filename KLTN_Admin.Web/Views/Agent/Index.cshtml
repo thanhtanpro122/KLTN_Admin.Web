@@ -15,10 +15,12 @@
                 <div class="table-toolbar">
                     <div>
                         <div style="float:left;">
-                            <button class="btn btn-success" data-toggle="modal"
-                                    data-target="#CreateModal">
-                                Thêm mới
-                            </button>
+                            <a asp-controller="Agent" asp-action="NewAgent">
+                                <button class="btn btn-success" data-toggle="modal"
+                                        data-target="#CreateModal">
+                                    Thêm mới
+                                </button>
+                            </a>
                         </div>
                         <div style="float:right;">
                             @using (Html.BeginForm("Index", "Agent", FormMethod.Post))
@@ -34,7 +36,6 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            @*<th>Mã admin</th>*@
                             <th>Tên nhà xe</th>
                             <th>Phí hủy</th>
                             <th width="150">Chỉnh sửa</th>
@@ -45,7 +46,6 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                @*<td>@item.Id</td>*@
                                 <td>@item.Name</td>
                                 <td>@item.CancelFee</td>
                                 <td>

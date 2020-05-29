@@ -4,7 +4,7 @@ namespace KLTN_Admin.SharedModels
 {
     public class AddtionalAgentShardeModel
     {
-        [JsonProperty("orderTypes")]
-        public ConstSharedModel[] OrderTypes { get; set; }
+        [JsonProperty("vehicleAndOrderTypes")]
+        public ConstSharedModel[] VehicleAndOrderTypes { get; set; }
     }
 }

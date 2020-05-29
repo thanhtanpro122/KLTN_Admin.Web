@@ -16,6 +16,19 @@ namespace KLTN_Admin.Services
 
         }
 
+        public bool AddAgentDetail(AgentAddSharedModel data)
+        {
+            var request = new RestRequest("/agent/addagent", Method.POST, DataFormat.Json);
+            request.AddJsonBody(data);
+            var response = _client.Execute(request);
+            var statusCode = (int)response.StatusCode;
+            if (statusCode != 200)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public AgentSharedModel CreateAgent(AgentSharedModel agent)
         {
             var request = new RestRequest("/agent", Method.POST, DataFormat.Json);

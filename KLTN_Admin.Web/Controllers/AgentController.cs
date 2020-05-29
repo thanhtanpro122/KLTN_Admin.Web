@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using KLTN_Admin.Common.Consts;
 using KLTN_Admin.ServiceInterfaces;
+using KLTN_Admin.SharedModels;
 using KLTN_Admin.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using X.PagedList;
@@ -41,7 +42,11 @@ namespace KLTN_Admin.Web.Controllers
             {
 
             }
+            var flag = _agentService.AddAgentDetail(_mapper.Map<AgentAddSharedModel>(model));
+            if (!flag)
+            {
 
+            }
             AttachAddtionalDataToView();
             return View();
         }
@@ -49,7 +54,11 @@ namespace KLTN_Admin.Web.Controllers
         private void AttachAddtionalDataToView()
         {
             var addtionalAgentData = _agentService.GetAddtionlAgentData();
-            ViewBag.OrderTypes = addtionalAgentData.OrderTypes.Where(e => e.Type == Consts.KieuXepLoaiDanhSo);
+            ViewBag.OrderTypes = addtionalAgentData.VehicleAndOrderTypes.Where(e => e.Type == Consts.KieuXepLoaiDanhSo);
+            var vehicleTypes = addtionalAgentData.VehicleAndOrderTypes.Where(e => e.Type == Consts.LoaiXe);
+            ViewBag.TypeXeThuong = vehicleTypes.FirstOrDefault(e => e.Value == ConstValues.LoaiXe.XeThuong).Id;
+            ViewBag.TypeXeGiuong = vehicleTypes.FirstOrDefault(e => e.Value == ConstValues.LoaiXe.XeGiuongNam).Id;
+
         }
     }
 }

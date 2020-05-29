@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace KLTN_Admin.Web.ViewModels
+namespace KLTN_Admin.SharedModels
 {
-    public class AgentAddViewModel : AgentViewModel
+    public class AgentAddSharedModel : AgentSharedModel
     {
         public string PhoneFrom { get; set; }
 
@@ -38,7 +37,5 @@ namespace KLTN_Admin.Web.ViewModels
         public int MapHeightXeGiuong { get; set; }
 
         public string OrderTypeXeGiuong { get; set; }
-
-        public string MapAgent { get; set; }
     }
 }
