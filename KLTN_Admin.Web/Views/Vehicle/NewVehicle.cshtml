@@ -1,0 +1,94 @@
+﻿@model VehicleAddViewModel
+
+@{
+    var vehicleTypes = (IEnumerable<ConstSharedModel>)ViewBag.VehicleTypes;
+
+    var agentList = (IEnumerable<AgentViewModel>)ViewBag.ListAgent;
+}
+<div class="container">
+    <form method="post" asp-controller="Vehicle" asp-action="NewVehicle">
+        <label class="dynamic-text">Thông tin xe</label>
+        <div class="form-row">
+            <div class="col-8 form-group">
+                <label asp-for="Name"></label>
+                <input type="text" asp-for="Name" class="form-control" />
+            </div>
+            <div class="col-4 form-group">
+                <label asp-for="VehicleType"></label>
+                <select asp-for="VehicleType" class="form-control">
+                    @foreach (var item in vehicleTypes)
+                    {
+                        <option value="@item.Id" data-value="@item.Value">@item.DisplayValue</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-4 form-group">
+                <label asp-for="LicensePlates">Biến số xe</label>
+                <input type="text" asp-for="LicensePlates" class="form-control" />
+            </div>
+            <div class="col-4 form-group">
+                <label asp-for="TotalSeats">Tổng số ghế</label>
+                <input type="number" asp-for="TotalSeats" class="form-control" />
+            </div>
+            <div class="col-4 form-group">
+                <label asp-for="VehicleAgent">Nhà Xe</label>
+                <select asp-for="VehicleAgent" class="form-control">
+                    @foreach (var item in agentList)
+                    {
+                        <option value="@item.Id" >@item.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-6 form-group">
+                <label asp-for="LocationFrom"></label>
+                <input type="text" asp-for="LocationFrom" class="form-control" />
+                <input type="text" hidden asp-for="LatitudeStartLocation" />
+                <input type="text" hidden asp-for="LongtitudeStartLocation" />
+            </div>
+
+            <div class="col-6 form-group">
+                <label asp-for="LocationTo"></label>
+                <input type="text" asp-for="LocationTo" class="form-control" />
+                <input type="text" hidden asp-for="LatitudeEndLocation" />
+                <input type="text" hidden asp-for="LongtitudeEndLocation" />
+            </div>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Thêm Xe" />
+    </form>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        var startLocation = 'LocationFrom';
+        var endLocation = 'LocationTo';
+
+        var autocompleteStartLocation, autocompleteEndLocation;
+        
+        // $(document).ready(function () {
+        //     autocompleteStartLocation = new google.maps.places.Autocomplete((document.getElementById(startLocation)), {
+        //        types: ['geocode']
+        //    });
+
+        //     google.maps.event.addListener(autocompleteStartLocation, 'place_changed', function () {
+        //         var palce = autocompleteStartLocation.getPlace();
+        //         document.getElementById('LatitudeStartLocation').value = palce.geometry.location.lat();
+        //         document.getElementById('LongtitudeStartLocation').value = palce.geometry.location.lng();
+        //     });
+
+
+        //     autocompleteEndLocation = new google.maps.places.Autocomplete((document.getElementById(endLocation)), {
+        //         types: ['geocode']
+        //     });
+
+        //     google.maps.event.addListener(autocompleteEndLocation, 'place_changed', function () {
+        //         var palce = autocompleteEndLocation.getPlace();
+        //         document.getElementById('LatitudeEndLocation').value = palce.geometry.location.lat();
+        //         document.getElementById('LongtitudeEndLocation').value = palce.geometry.location.lng();
+        //     });
+        //});
+    </script>
+}

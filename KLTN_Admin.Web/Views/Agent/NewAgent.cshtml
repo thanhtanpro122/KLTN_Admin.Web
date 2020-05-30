@@ -8,9 +8,11 @@
         .map td {
             padding: 13px;
         }
+
         .map {
             text-align: center;
         }
+
         .btn-preview {
             margin-top: 25px;
         }
@@ -62,7 +64,7 @@
 
         <label class="dynamic-text">Chỉ định sơ đồ ghế</label><br />
         <label>Cho xe thường</label>
-        <input type="hidden" asp-for="MapTypeXeThuong" value="@ViewBag.TypeXeThuong"/>
+        <input type="hidden" asp-for="MapTypeXeThuong" value="@ViewBag.TypeXeThuong" />
 
         <div class="form-row">
             <div class="col form-group">
@@ -85,7 +87,7 @@
                 </select>
             </div>
             <div class="col form-group">
-                <input type="button" id="review-map-xe-thuong" class="btn btn-warning btn-preview" value="Preview"/>
+                <input type="button" id="review-map-xe-thuong" class="btn btn-warning btn-preview" value="Preview" />
             </div>
         </div>
         <label>Cho xe giường</label>
@@ -119,7 +121,7 @@
     </form>
 </div>
 
-<div class="modal fade" id="MapModal" tabindex="-1" role="dialog" 
+<div class="modal fade" id="MapModal" tabindex="-1" role="dialog"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -129,7 +131,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" >
+            <div class="modal-body">
                 <div class="form-group" id="review">
                 </div>
             </div>
@@ -163,6 +165,53 @@
             return html;
         }
 
+        function vePhaiQuaTrai(width, height) {
+            let html = '<table class="map">';
+            for (let i = 1; i <= height; i++) {
+                let count = width * i;
+                html += "<tr>";
+                for (let j = 1; j <= width; j++) {
+                    html += `<td>${count--}</td>`;
+                }
+                html += "</tr>";
+            }
+            html += "</table>";
+
+            return html;
+        }
+
+        function veTrenXuongDuoi(width, height) {
+            let html = '<table class="map">';
+            
+            for (let i = 1; i <= height; i++) {
+                html += "<tr>";
+                for (let j = 1; j <= width; j++) {
+                    let count = ((width - j) * height) + i;
+                    html += `<td>${count}</td>`;
+                }
+                html += "</tr>";
+            }
+            html += "</table>";
+
+            return html;
+        }
+
+        function veDuoiLenTren(width, height) {
+            let html = '<table class="map">';
+
+            for (let i = 1; i <= height; i++) {
+                html += "<tr>";
+                for (let j = 1; j <= width; j++) {
+                    let count = ((width - j + 1) * height) - i + 1;
+                    html += `<td>${count}</td>`;
+                }
+                html += "</tr>";
+            }
+            html += "</table>";
+
+            return html;
+        }
+
         $("#review-map-xe-thuong").on("click", () => {
             let width = $("#MapWidthXeThuong").val();
             let height = $("#MapHeightXeThuong").val();
@@ -170,6 +219,18 @@
 
             if (orderType === '@ConstValues.KieuXepLoaiDanhSo.TraiSangPhai') {
                 $("#review").html(veTraiQuaPhai(width, height));
+            }
+            if(orderType === '@ConstValues.KieuXepLoaiDanhSo.PhaiSangTrai')
+            {
+                $("#review").html(vePhaiQuaTrai(width, height));
+            }
+            if(orderType === '@ConstValues.KieuXepLoaiDanhSo.TrenXuongDuoi')
+            {
+                $("#review").html(veTrenXuongDuoi(width, height));
+            }
+            if(orderType === '@ConstValues.KieuXepLoaiDanhSo.DuoiLenTren')
+            {
+                $("#review").html(veDuoiLenTren(width, height));
             }
 
             $("#MapModal").modal("show");
@@ -187,27 +248,27 @@
             $("#MapModal").modal("show");
         });
 
-         $(document).ready(function () {
-             autocompleteLocationFrom = new google.maps.places.Autocomplete((document.getElementById(locationFrom)), {
-                types: ['geocode']
-            });
+        // $(document).ready(function () {
+        //     autocompleteLocationFrom = new google.maps.places.Autocomplete((document.getElementById(locationFrom)), {
+        //        types: ['geocode']
+        //    });
 
-             google.maps.event.addListener(autocompleteLocationFrom, 'place_changed', function () {
-                 var palce = autocompleteLocationFrom.getPlace();
-                 document.getElementById('LatitudeLocationFrom').value = palce.geometry.location.lat();
-                 document.getElementById('LongitudeLocationFrom').value = palce.geometry.location.lng();
-             });
+        //     google.maps.event.addListener(autocompleteLocationFrom, 'place_changed', function () {
+        //         var palce = autocompleteLocationFrom.getPlace();
+        //         document.getElementById('LatitudeLocationFrom').value = palce.geometry.location.lat();
+        //         document.getElementById('LongitudeLocationFrom').value = palce.geometry.location.lng();
+        //     });
 
 
-             autocompleteLocationTo = new google.maps.places.Autocomplete((document.getElementById(locationTo)), {
-                 types: ['geocode']
-             });
+        //     autocompleteLocationTo = new google.maps.places.Autocomplete((document.getElementById(locationTo)), {
+        //         types: ['geocode']
+        //     });
 
-             google.maps.event.addListener(autocompleteLocationTo, 'place_changed', function () {
-                 var palce = autocompleteLocationTo.getPlace();
-                 document.getElementById('LatitudeLocationTo').value = palce.geometry.location.lat();
-                 document.getElementById('LongitudeLocationTo').value = palce.geometry.location.lng();
-             });
-        });
+        //     google.maps.event.addListener(autocompleteLocationTo, 'place_changed', function () {
+        //         var palce = autocompleteLocationTo.getPlace();
+        //         document.getElementById('LatitudeLocationTo').value = palce.geometry.location.lat();
+        //         document.getElementById('LongitudeLocationTo').value = palce.geometry.location.lng();
+        //     });
+        //});
     </script>
 }

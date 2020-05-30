@@ -15,6 +15,19 @@ namespace KLTN_Admin.Services
 
         }
 
+        public bool AddVehicleAndSeatMap(VehicleAddSharedModel data)
+        {
+            var request = new RestRequest("/vehicle/addvehicleandseatmap", Method.POST, DataFormat.Json);
+            request.AddJsonBody(data);
+            var response = _client.Execute(request);
+            var statusCode = (int)response.StatusCode;
+            if (statusCode != 200)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public bool CreateVehicle(VehicleShareModel vehicle)
         {
             throw new NotImplementedException();

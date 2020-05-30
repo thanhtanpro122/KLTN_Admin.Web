@@ -45,10 +45,10 @@ namespace KLTN_Admin.Web.Controllers
             var flag = _agentService.AddAgentDetail(_mapper.Map<AgentAddSharedModel>(model));
             if (!flag)
             {
-
+                return NotFound();
             }
-            AttachAddtionalDataToView();
-            return View();
+            //AttachAddtionalDataToView();
+            return RedirectToAction("Index");
         }
 
         private void AttachAddtionalDataToView()

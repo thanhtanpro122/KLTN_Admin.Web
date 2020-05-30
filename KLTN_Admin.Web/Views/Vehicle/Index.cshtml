@@ -15,10 +15,11 @@
                 <div class="table-toolbar">
                     <div>
                         <div style="float:left;">
-                            <button class="btn btn-success" data-toggle="modal"
-                                    data-target="#CreateModal">
-                                Thêm mới
-                            </button>
+                            <a asp-controller="Vehicle" asp-action="NewVehicle">
+                                <button class="btn btn-success">
+                                    Thêm mới
+                                </button>
+                            </a>
                         </div>
                         <div style="float:right;">
                             @using (Html.BeginForm("Index", "Vehicle", FormMethod.Post))
@@ -49,7 +50,7 @@
                         @foreach (var item in Model)
                         {
                         <tr>
-                            <td>@item.Type</td>
+                            <td>@item.Type.DisplayValue</td>
                             <td>@item.Name</td>
                             <td>@item.TotalSeats</td>
                             <td>@item.LicensePlates</td>
