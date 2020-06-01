@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,6 +15,7 @@ namespace KLTN_Admin.Web.ViewModels
         
         public string Name { get; set; }
         
+        [Display(Name = "Tổng số ghế")]
         public string TotalSeats { get; set; }
         
         public string LicensePlates { get; set; }

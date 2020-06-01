@@ -43,10 +43,43 @@ namespace KLTN_Admin.Web.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult GetMap(string agentId, string vehicleType)
+        {
+            if (string.IsNullOrWhiteSpace(agentId) || string.IsNullOrWhiteSpace(vehicleType))
+            {
+                return BadRequest();
+            }
+
+            var map = _vehicleService.GetMapByAgentAndVehicleType(agentId, vehicleType);
+            if (map == null)
+            {
+                return Json(null);
+            }
+
+            var mapViewModel = _mapper.Map<MapViewModel>(map);
+            return Json(new 
+            { 
+                orderType = mapViewModel.OrderType.Value,
+                width = mapViewModel.Width,
+                height = mapViewModel.Height
+            });
+        }
+
         [HttpPost]
         public IActionResult NewVehicle(VehicleAddViewModel data)
         {
-            var check = _vehicleService.AddVehicleAndSeatMap(_mapper.Map<VehicleAddSharedModel>(data));
+            var seatMap = new List<(int, string)>();
+            foreach (var pair in data.NumberSeats)
+            {
+                var temp = pair.Split('-', StringSplitOptions.RemoveEmptyEntries);
+                if (temp != null && temp.Length == 2 && int.TryParse(temp[0], out var index))
+                {
+                    seatMap.Add((index, temp[1]));
+                }
+            }
+
+            var check = _vehicleService.AddVehicleAndSeatMap(_mapper.Map<VehicleAddSharedModel>(data), seatMap);
             if (!check)
             {
                 return NotFound();

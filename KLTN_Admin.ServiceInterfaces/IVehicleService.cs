@@ -17,6 +17,8 @@ namespace KLTN_Admin.ServiceInterfaces
 
         bool DeleteVehicle(string vehicleId);
 
-        bool AddVehicleAndSeatMap(VehicleAddSharedModel data);
+        bool AddVehicleAndSeatMap(VehicleAddSharedModel data, List<(int, string)> seatMap);
+
+        MapSharedModel GetMapByAgentAndVehicleType(string agentId, string vehicleType);
     }
 }

@@ -12,13 +12,17 @@ namespace KLTN_Admin.Services
     {
         public VehicleService() : base()
         {
-
         }
 
-        public bool AddVehicleAndSeatMap(VehicleAddSharedModel data)
+        public bool AddVehicleAndSeatMap(VehicleAddSharedModel data, List<(int, string)> seatMap)
         {
             var request = new RestRequest("/vehicle/addvehicleandseatmap", Method.POST, DataFormat.Json);
-            request.AddJsonBody(data);
+            request.AddJsonBody(new
+            {
+                VehicleData = data,
+                SeatMap = seatMap
+            });
+
             var response = _client.Execute(request);
             var statusCode = (int)response.StatusCode;
             if (statusCode != 200)
@@ -26,6 +30,15 @@ namespace KLTN_Admin.Services
                 return false;
             }
             return true;
+        }
+
+        public MapSharedModel GetMapByAgentAndVehicleType(string agentId, string vehicleType)
+        {
+            var request = new RestRequest("/mapbyagent", Method.GET);
+            request.AddParameter("agentId", agentId);
+            request.AddParameter("vehicleType", vehicleType);
+
+            return ExecuteRequest<MapSharedModel>(request);
         }
 
         public bool CreateVehicle(VehicleShareModel vehicle)

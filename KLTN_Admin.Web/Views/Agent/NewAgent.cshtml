@@ -143,96 +143,20 @@
 </div>
 
 @section Scripts {
+    <script src="~/js/draw-map.js"></script>
+
     <script type="text/javascript">
         var locationFrom = 'LocationFrom';
         var locationTo = 'LocationTo';
 
         var autocompleteLocationFrom, autocompleteLocationTo;
 
-
-        function veTraiQuaPhai(width, height) {
-            let count = 1;
-            let html = '<table class="map">';
-            for (let i = 1; i <= height; i++) {
-                html += "<tr>";
-                for (let j = 1; j <= width; j++) {
-                    html += `<td>${count++}</td>`;
-                }
-                html += "</tr>";
-            }
-            html += "</table>";
-
-            return html;
-        }
-
-        function vePhaiQuaTrai(width, height) {
-            let html = '<table class="map">';
-            for (let i = 1; i <= height; i++) {
-                let count = width * i;
-                html += "<tr>";
-                for (let j = 1; j <= width; j++) {
-                    html += `<td>${count--}</td>`;
-                }
-                html += "</tr>";
-            }
-            html += "</table>";
-
-            return html;
-        }
-
-        function veTrenXuongDuoi(width, height) {
-            let html = '<table class="map">';
-            
-            for (let i = 1; i <= height; i++) {
-                html += "<tr>";
-                for (let j = 1; j <= width; j++) {
-                    let count = ((width - j) * height) + i;
-                    html += `<td>${count}</td>`;
-                }
-                html += "</tr>";
-            }
-            html += "</table>";
-
-            return html;
-        }
-
-        function veDuoiLenTren(width, height) {
-            let html = '<table class="map">';
-
-            for (let i = 1; i <= height; i++) {
-                html += "<tr>";
-                for (let j = 1; j <= width; j++) {
-                    let count = ((width - j + 1) * height) - i + 1;
-                    html += `<td>${count}</td>`;
-                }
-                html += "</tr>";
-            }
-            html += "</table>";
-
-            return html;
-        }
-
         $("#review-map-xe-thuong").on("click", () => {
             let width = $("#MapWidthXeThuong").val();
             let height = $("#MapHeightXeThuong").val();
             let orderType = $("#OrderTypeXeThuong").children("option:selected").data("value");
 
-            if (orderType === '@ConstValues.KieuXepLoaiDanhSo.TraiSangPhai') {
-                $("#review").html(veTraiQuaPhai(width, height));
-            }
-            if(orderType === '@ConstValues.KieuXepLoaiDanhSo.PhaiSangTrai')
-            {
-                $("#review").html(vePhaiQuaTrai(width, height));
-            }
-            if(orderType === '@ConstValues.KieuXepLoaiDanhSo.TrenXuongDuoi')
-            {
-                $("#review").html(veTrenXuongDuoi(width, height));
-            }
-            if(orderType === '@ConstValues.KieuXepLoaiDanhSo.DuoiLenTren')
-            {
-                $("#review").html(veDuoiLenTren(width, height));
-            }
-
+            $("#review").html(_mapDrawer.draw(width, height, orderType));
             $("#MapModal").modal("show");
         });
 

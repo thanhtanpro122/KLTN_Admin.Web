@@ -10,6 +10,9 @@ namespace KLTN_Admin.SharedModels
         [JsonProperty("_id")]
         public string Id { get; set; }
 
+        [JsonProperty("agent")]
+        public AgentSharedModel Agent { get; set; }
+
         [JsonProperty("type")]
         public ConstSharedModel Type { get; set; }
 

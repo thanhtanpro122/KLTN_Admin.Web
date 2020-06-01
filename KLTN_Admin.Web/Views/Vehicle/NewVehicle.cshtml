@@ -5,8 +5,30 @@
 
     var agentList = (IEnumerable<AgentViewModel>)ViewBag.ListAgent;
 }
+
+@section Styles {
+    <style>
+        :root {
+            --width: 70px;
+        }
+
+        input.seat-number-input {
+            width: var(--width);
+        }
+
+        td {
+            width: var(--width);
+            text-align: center;
+        }
+
+        span.edit-seat i {
+            font-size: 32px;
+        }
+    </style>
+}
+
 <div class="container">
-    <form method="post" asp-controller="Vehicle" asp-action="NewVehicle">
+    <form method="post" asp-controller="Vehicle" asp-action="NewVehicle" id="form-add-vehicle">
         <label class="dynamic-text">Thông tin xe</label>
         <div class="form-row">
             <div class="col-8 form-group">
@@ -29,7 +51,7 @@
                 <input type="text" asp-for="LicensePlates" class="form-control" />
             </div>
             <div class="col-4 form-group">
-                <label asp-for="TotalSeats">Tổng số ghế</label>
+                <label asp-for="TotalSeats"></label>
                 <input type="number" asp-for="TotalSeats" class="form-control" />
             </div>
             <div class="col-4 form-group">
@@ -37,7 +59,7 @@
                 <select asp-for="VehicleAgent" class="form-control">
                     @foreach (var item in agentList)
                     {
-                        <option value="@item.Id" >@item.Name</option>
+                        <option value="@item.Id">@item.Name</option>
                     }
                 </select>
             </div>
@@ -57,38 +79,170 @@
                 <input type="text" hidden asp-for="LongtitudeEndLocation" />
             </div>
         </div>
-        <input type="submit" class="btn btn-primary" value="Thêm Xe" />
+
+        <div id="seat-map">
+
+        </div>
+
+        <input type="submit" class="btn btn-primary" id="btn-submit-add-vehicle" value="Thêm Xe" />
     </form>
 </div>
 
+
+
 @section Scripts {
+    <script src="~/js/draw-map.js"></script>
+
     <script type="text/javascript">
         var startLocation = 'LocationFrom';
         var endLocation = 'LocationTo';
 
         var autocompleteStartLocation, autocompleteEndLocation;
-        
-        // $(document).ready(function () {
-        //     autocompleteStartLocation = new google.maps.places.Autocomplete((document.getElementById(startLocation)), {
-        //        types: ['geocode']
-        //    });
 
-        //     google.maps.event.addListener(autocompleteStartLocation, 'place_changed', function () {
-        //         var palce = autocompleteStartLocation.getPlace();
-        //         document.getElementById('LatitudeStartLocation').value = palce.geometry.location.lat();
-        //         document.getElementById('LongtitudeStartLocation').value = palce.geometry.location.lng();
-        //     });
+        function drawMapByVehicleTypeAndAgent() {
+            let agentId = $('#VehicleAgent').val();
+            let vehicleTypeId = $('#VehicleType').val();
+
+            $.get('/Vehicle/GetMap', { agentId: agentId, vehicleType: vehicleTypeId }, data => {
+                if (data) {
+                    let customHtml = `
+                            <input type="hidden" class="seat-index" value="{number}" />
+                            <input type="hidden" class="number-seat-pair" name="NumberSeats" value="{number}-" />
+                            <label class="seat-number-display"></label>
+                            <span class="edit-seat"><i class="mdi mdi-pencil"></i></span>
+                            <input type="text" style="display: none;" class="seat-number-input" />
+                        `;
+
+                    let content = _mapDrawer.draw(data.width, data.height, data.orderType, customHtml);
+                    $("#seat-map").html(content);
+                }
+            });
+        }
+
+        function showEditSeat(e, currentValue) {
+            let seatCount = $('#TotalSeats').val();
+            let seats = getCurrentSeat();
+            console.log(currentValue);
+            if (seats >= seatCount && !currentValue) {
+                return;
+            }
+
+            let allVisibilities = $('input.seat-number-input').map((_, item) => $(item).is(':visible')).get();
+            if (allVisibilities.includes(true)) {
+                return;
+            }
+
+            let parent = $(e.target).closest('td');
+            $(e.target).hide();
+
+            let inputEdit = parent.find('input.seat-number-input');
+            if (currentValue) {
+                inputEdit.val(currentValue);
+            }
+
+            inputEdit.show();
+            inputEdit.focus();
+        }
+
+        function getCurrentSeat() {
+            let seats = $('.number-seat-pair').map((_, item) => $(item).val().toString().split('-')[1]).get();
+            return seats.filter(item => item.trim().length > 0).length;
+        }
+
+        $(document).ready(function () {
+            autocompleteStartLocation = new google.maps.places.Autocomplete((document.getElementById(startLocation)), {
+                types: ['geocode']
+            });
+
+            google.maps.event.addListener(autocompleteStartLocation, 'place_changed', function () {
+                var palce = autocompleteStartLocation.getPlace();
+                document.getElementById('LatitudeStartLocation').value = palce.geometry.location.lat();
+                document.getElementById('LongtitudeStartLocation').value = palce.geometry.location.lng();
+            });
 
 
-        //     autocompleteEndLocation = new google.maps.places.Autocomplete((document.getElementById(endLocation)), {
-        //         types: ['geocode']
-        //     });
+            autocompleteEndLocation = new google.maps.places.Autocomplete((document.getElementById(endLocation)), {
+                types: ['geocode']
+            });
 
-        //     google.maps.event.addListener(autocompleteEndLocation, 'place_changed', function () {
-        //         var palce = autocompleteEndLocation.getPlace();
-        //         document.getElementById('LatitudeEndLocation').value = palce.geometry.location.lat();
-        //         document.getElementById('LongtitudeEndLocation').value = palce.geometry.location.lng();
-        //     });
-        //});
+            google.maps.event.addListener(autocompleteEndLocation, 'place_changed', function () {
+                var palce = autocompleteEndLocation.getPlace();
+                document.getElementById('LatitudeEndLocation').value = palce.geometry.location.lat();
+                document.getElementById('LongtitudeEndLocation').value = palce.geometry.location.lng();
+            });
+
+            $('#VehicleType').on('change', () => {
+                drawMapByVehicleTypeAndAgent();
+            });
+
+            $('#VehicleAgent').on('change', () => {
+                drawMapByVehicleTypeAndAgent();
+            });
+
+            $('#seat-map').on('click', '.edit-seat', e => {
+                showEditSeat(e);
+            });
+
+            $('#seat-map').on('click', 'label.seat-number-display', e => {
+                showEditSeat(e, $(e.target).html());
+            });
+
+            $('#seat-map').on('blur', 'input.seat-number-input', e => {
+                let me = $(e.target);
+                let parent = me.closest('td');
+                let inputSeatNumber = parent.find('input.seat-number-input');
+                let seatNumber = inputSeatNumber.val();
+                let seatNumberPair = parent.find('input.number-seat-pair');
+
+                let allSeats = $('.seat-number-input').map((_, item) => $(item).val()).get();
+                let exist = false;
+                let count = 0;
+                for (let i = 0; i < allSeats.length; i++) {
+                    if (allSeats[i] == seatNumber) {
+                        count++;
+                    }
+
+                    if (count >= 2) {
+                        exist = true;
+                        break;
+                    }
+                }
+
+                if (exist) {
+                    if (seatNumber.toString().trim()) {
+                        inputSeatNumber.focus();
+                    } else {
+                        me.hide();
+                        seatNumberPair.val(seatNumberPair.val().split('-')[0] + '-');
+                        parent.find('.edit-seat').find('i').show();
+                    }
+
+                    return;
+                }
+
+                let display = parent.find('label.seat-number-display');
+                display.html(seatNumber.toString());
+
+                
+                let data = seatNumberPair.val().split("-");
+                let newData = data[0] + '-' + seatNumber;
+                seatNumberPair.val(newData);
+
+                me.hide();
+                display.show();
+            });
+
+            $('#form-add-vehicle').on('submit', e => {
+                let seatCount = $('#TotalSeats').val();
+                let seats = getCurrentSeat();
+
+                if (seatCount != seats) {
+                    alert('So luong ghe khong khop');
+                    return false;
+                }
+
+                return true;
+            });
+        });
     </script>
 }

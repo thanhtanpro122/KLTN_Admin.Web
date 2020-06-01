@@ -22,5 +22,7 @@ namespace KLTN_Admin.Web.ViewModels
         public string VehicleType { get; set; }
 
         public string VehicleAgent { get; set; }
+
+        public string[] NumberSeats { get; set; }
     }
 }

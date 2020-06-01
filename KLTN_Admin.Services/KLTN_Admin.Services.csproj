@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\KLTN_Admin.Common\KLTN_Admin.Common.csproj" />
     <ProjectReference Include="..\KLTN_Admin.ServiceInterfaces\KLTN_Admin.ServiceInterfaces.csproj" />
     <ProjectReference Include="..\KLTN_Admin.SharedModels\KLTN_Admin.SharedModels.csproj" />
   </ItemGroup>

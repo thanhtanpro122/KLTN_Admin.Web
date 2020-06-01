@@ -50,13 +50,13 @@
                         @foreach (var item in Model)
                         {
                         <tr>
-                            <td>@item.Type.DisplayValue</td>
+                            <td>@item.Type?.DisplayValue</td>
                             <td>@item.Name</td>
                             <td>@item.TotalSeats</td>
                             <td>@item.LicensePlates</td>
-                            <td>@item.Agent.Name</td>
-                            <td>@item.StartLocation.Address</td>
-                            <td>@item.EndLocation.Address</td>
+                            <td>@item.Agent?.Name</td>
+                            <td>@item.StartLocation?.Address</td>
+                            <td>@item.EndLocation?.Address</td>
                             <td>
                                 <a href="#" class="btn btn-primary edit-admin" data-id="@item.Id">
                                     Edit

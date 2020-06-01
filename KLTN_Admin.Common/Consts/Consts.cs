@@ -5,5 +5,12 @@
         public const string LoaiXe = "loai_xe";
 
         public const string KieuXepLoaiDanhSo = "kieu_xep_loai_danh_so";
+
+        public static class ResponseState 
+        {
+            public const string Failed = "Failed";
+
+            public const string Successfull = "Successfull";
+        }
     }
 }
