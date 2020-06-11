@@ -19,5 +19,30 @@
 
             public const string TrenXuongDuoi = "tren_xuong_duoi";
         }
+
+        public static class TrangThaiGhe
+        {
+            public const string Trong = "trong";
+
+            public const string DaDat = "da_dat";
+        }
+
+        public static class TrangThaiHanhTrinh
+        {
+            public const string DaDi = "da_di";
+
+            public const string ChuaDi = "chua_di";
+
+            public const string Huy = "huy";
+        }
+
+        public static class TrangThaiDatCho
+        {
+            public const string DaDi = "da_di";
+
+            public const string Cho = "cho";
+
+            public const string DaHuy = "da_huy";
+        }
     }
 }

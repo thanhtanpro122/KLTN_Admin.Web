@@ -11,7 +11,7 @@ namespace KLTN_Admin.Web.ViewModels
         
         public string Address { get; set; }
         
-        public string Timestamp { get; set; }
+        public DateTime Timestamp { get; set; }
         
         public string CoordLatitude { get; set; }
 

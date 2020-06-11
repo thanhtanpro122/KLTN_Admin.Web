@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace KLTN_Admin.Services
@@ -58,7 +59,17 @@ namespace KLTN_Admin.Services
         public List<RouteSharedModel> GetListRoute()
         {
             var request = new RestRequest("/route", Method.GET);
-            return _client.Execute<List<RouteSharedModel>>(request).Data;
+            var response = _client.Execute(request);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var data = response.Content;
+                if (!string.IsNullOrWhiteSpace(data))
+                {
+                    return JsonConvert.DeserializeObject<List<RouteSharedModel>>(data);
+                }
+            }
+
+            return null;
         }
 
         public RouteSharedModel GetRouteById(string routeId)

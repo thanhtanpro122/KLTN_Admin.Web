@@ -37,5 +37,13 @@ namespace KLTN_Admin.SharedModels
         public int MapHeightXeGiuong { get; set; }
 
         public string OrderTypeXeGiuong { get; set; }
+
+        public string[] PhoneAddNew { get; set; }
+
+        public string[] LocationAddNew { get; set; }
+
+        public double[] LatitudeLocationAddNew { get; set; }
+
+        public double[] LongitudeLocationAddNew { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using KLTN_Admin.Common.Consts;
 using KLTN_Admin.ServiceInterfaces;
 using KLTN_Admin.SharedModels;
 using KLTN_Admin.Web.ViewModels;
@@ -17,13 +18,15 @@ namespace KLTN_Admin.Web.Controllers
         private readonly ILocationService _locationService;
         private readonly IVehicleService _vehicleService;
         private readonly IAgentService _agentService;
+        private readonly IConstService _constService;
 
-        public RouteController(IRouteService routeService, ILocationService locationService, IVehicleService vehicleService, IAgentService agentService, IMapper mapper) : base(mapper)
+        public RouteController(IRouteService routeService, ILocationService locationService, IVehicleService vehicleService, IAgentService agentService, IConstService constService, IMapper mapper) : base(mapper)
         {
             _routeService = routeService;
             _locationService = locationService;
             _vehicleService = vehicleService;
             _agentService = agentService;
+            _constService = constService;
         }
         public IActionResult Index(string agentId, string vehicleId, DateTime startDate, int? page)
         {
@@ -70,7 +73,7 @@ namespace KLTN_Admin.Web.Controllers
         public IActionResult Create(RouteViewModel route)
         {
             route.DepartureDate = route.DepartureDate.Date;
-            route.Status = 0;
+            //route.Status = 0;
             var vehicle = _vehicleService.GetVehicleById(route.VehicleId);
             if (vehicle == null)
             {
@@ -92,6 +95,13 @@ namespace KLTN_Admin.Web.Controllers
                 Id = vehicle.Id
             };
 
+            var listconst = _mapper.Map<List<ConstViewModel>>(_constService.GetListConst());
+            var constSelect = listconst.FirstOrDefault(e => e.Type == Consts.TrangThaiHanhTrinh && e.Value == ConstValues.TrangThaiHanhTrinh.ChuaDi);
+
+            route.Status = new ConstViewModel()
+            {
+                Id = constSelect.Id
+            };
 
             var flag = _routeService.CreateRoute(_mapper.Map<RouteSharedModel>(route));
             if (!flag)
@@ -159,7 +169,11 @@ namespace KLTN_Admin.Web.Controllers
             {
                 return NotFound();
             }
-            route.Status = 1;
+
+            var listconst = _mapper.Map<List<ConstViewModel>>(_constService.GetListConst());
+            var constSelect = listconst.FirstOrDefault(e => e.Type == Consts.TrangThaiHanhTrinh && e.Value == ConstValues.TrangThaiHanhTrinh.DaDi);
+
+            route.Status = constSelect;
             var flag = _routeService.EditRoute(_mapper.Map<RouteSharedModel>(route));
             if (!flag)
             {

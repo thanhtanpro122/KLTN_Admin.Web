@@ -10,6 +10,6 @@
 
         public string DisplayValue { get; set; }
 
-        public string Agent { get; set; }
+        public AgentViewModel Agent { get; set; }
     }
 }

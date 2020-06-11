@@ -37,7 +37,6 @@
                             <th>Loại</th>
                             <th>Giá trị</th>
                             <th>Tên hiển thị</th>
-                            <th>Nhà xe</th>
                             <th width="150">Chỉnh sửa</th>
                             <th width="85">Xóa</th>
                         </tr>
@@ -49,14 +48,13 @@
                                 <td>@item.Type</td>
                                 <td>@item.Value</td>
                                 <td>@item.DisplayValue</td>
-                                <td>@item.Agent</td>
                                 <td>
                                     <a href="#" class="btn btn-primary edit-admin" data-id="@item.Id">
                                         Edit
                                     </a>
                                 </td>
                                 <td>
-                                    <a asp-controller="Admin" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger delete_admin">
+                                    <a asp-controller="Const" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger delete_const">
                                         Delete
                                     </a>
                                 </td>
@@ -78,3 +76,85 @@
     </div>
 </div>
 
+<!-- Modal -->
+<!-- Create modal -->
+<div class="modal fade" id="CreateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thêm Hằng số</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("Create", "Const", FormMethod.Post, new { id = "create-const-form" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Type">Loại</label>
+                        <input class="form-control" type="text" id="Type" name="Type"
+                               placeholder="Loại">
+                        <span id="validate_Type" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="Value">Giá trị</label>
+                        <input class="form-control" type="text" id="Value" name="Value"
+                               placeholder="Giá trị">
+                        <span id="validate_Value" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="DisplayValue">hiển thị</label>
+                        <input type="text" class="form-control" id="DisplayValue" name="DisplayValue" placeholder="hiển thị">
+                        <span id="validate_DisplayValue" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Create</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.delete_const').click(function (e) {
+                var result = confirm("Want to delete?");
+                if (!result) {
+                    e.preventDefault();
+                }
+            });
+
+            $("#create-const-form").submit(() => {
+                $("#validate_Type").html("");
+                $("#validate_Value").html("");
+                $("#validate_DisplayValue").html("");
+
+                let valid = true;
+                let type = $("#Type").val();
+                let value = $("#Value").val();
+                let displayValue = $("#DisplayValue").val();
+
+                if (type == "") {
+                    $("#validate_Type").html("Loại không hợp lệ!");
+                    valid = false;
+                }
+
+                if (value == "") {
+                    $("#validate_Value").html("Giá trị không hợp lệ!");
+                    valid = false;
+                }
+
+                if (displayValue == "") {
+                    $("#validate_DisplayValue").html("Tên hiển thị không hợp lệ!");
+                    valid = false;
+                }
+
+                return valid;
+            });
+        });
+    </script>
+}

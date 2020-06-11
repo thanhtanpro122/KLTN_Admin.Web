@@ -40,5 +40,13 @@ namespace KLTN_Admin.Web.ViewModels
         public string OrderTypeXeGiuong { get; set; }
 
         public string MapAgent { get; set; }
+
+        public string[] PhoneAddNew { get; set; }
+
+        public string[] LocationAddNew { get; set; }
+
+        public double[] LatitudeLocationAddNew { get; set; }
+
+        public double[] LongitudeLocationAddNew { get; set; }
     }
 }

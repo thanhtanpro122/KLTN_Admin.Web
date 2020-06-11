@@ -24,10 +24,6 @@ namespace KLTN_Admin.Web.Controllers
 
         public IActionResult Index(string searchString, int? page)
         {
-            if (searchString != null)
-            {
-                page = 1;
-            }
             var model = _mapper.Map<List<AdminViewModel>>(_adminService.GetAllAdmins());
             var adminLogin = model.FirstOrDefault(e => e.Id == Request.Cookies["AdminId"]);
             if (adminLogin != null)
@@ -57,6 +53,8 @@ namespace KLTN_Admin.Web.Controllers
             }
             if (!String.IsNullOrEmpty(searchString))
             {
+                page = 1;
+                ViewBag.searchString = searchString;
                 model = model.Where(s => s.UserName.Contains(searchString)).ToList();
             }
             int pageSize = 10;

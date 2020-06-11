@@ -20,6 +20,6 @@ namespace KLTN_Admin.SharedModels
         public string DisplayValue { get; set; }
 
         [JsonProperty("agent")]
-        public string Agent { get; set; }
+        public AgentSharedModel Agent { get; set; }
     }
 }

@@ -27,7 +27,7 @@ namespace KLTN_Admin.Web.ViewModels
         
         public LocationViewModel EndLocation { get; set; }    
 
-        public int Status { get; set; }
+        public ConstViewModel Status { get; set; }
         
         public int Price { get; set; }
         

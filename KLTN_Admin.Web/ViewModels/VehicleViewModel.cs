@@ -10,7 +10,6 @@ namespace KLTN_Admin.Web.ViewModels
     {
         public string Id { get; set; }
         
-        // 0 là ghế cứng , 1 là giường nằm
         public ConstViewModel Type { get; set; }
         
         public string Name { get; set; }

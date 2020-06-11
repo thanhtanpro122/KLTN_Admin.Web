@@ -62,6 +62,13 @@
             </div>
         </div>
 
+        <div id="fillinfo">
+
+        </div>
+
+        <input class="btn btn-info add-info-agent" value="Thêm thông tin" />
+        <br />
+
         <label class="dynamic-text">Chỉ định sơ đồ ghế</label><br />
         <label>Cho xe thường</label>
         <input type="hidden" asp-for="MapTypeXeThuong" value="@ViewBag.TypeXeThuong" />
@@ -172,27 +179,72 @@
             $("#MapModal").modal("show");
         });
 
-        // $(document).ready(function () {
-        //     autocompleteLocationFrom = new google.maps.places.Autocomplete((document.getElementById(locationFrom)), {
-        //        types: ['geocode']
-        //    });
+        $(".add-info-agent").on("click", () => {
+            var customHtml = `
+                <label class="dynamic-text">Thông tin nhà xe</label>
+                <div class="form-row">
+                <div class="col-8 form-group">
+                    <label >Location</label>
+                    <input type="text" id="LocationAddNew${new Date().getMilliseconds()}" name="LocationAddNew" class="form-control location_GGMap" />
+                    <input type="text" hidden class="locationLatitude" name="LatitudeLocationAddNew" />
+                    <input type="text" hidden class="locationLongitude"  name="LongitudeLocationAddNew"/>
+                </div>
+                <div class="col-4 form-group">
+                    <label>Phone</label>
+                    <input type="text" name="PhoneAddNew" class="form-control" />
+                </div>
+                </div>
+            `;
+            $('#fillinfo').append(customHtml);
+        });
 
-        //     google.maps.event.addListener(autocompleteLocationFrom, 'place_changed', function () {
-        //         var palce = autocompleteLocationFrom.getPlace();
-        //         document.getElementById('LatitudeLocationFrom').value = palce.geometry.location.lat();
-        //         document.getElementById('LongitudeLocationFrom').value = palce.geometry.location.lng();
-        //     });
+        $('#fillinfo').bind('DOMSubtreeModified', function () {
+            var acInputs = document.getElementsByClassName("location_GGMap");
+
+            for (var i = 0; i < acInputs.length; i++) {
+
+                var autocomplete = new google.maps.places.Autocomplete(acInputs[i], {
+                    types: ['geocode', 'establishment'],
+                    componentRestrictions: { country: "vn" }
+                });
+                autocomplete.inputId = acInputs[i].id;
+
+                google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                    var palce = autocomplete.getPlace();
+
+                    let parent = $(`#`+this.inputId).closest('div');
+                    let inputLatitude = parent.find('input.locationLatitude');
+                    let inputLongitude = parent.find('input.locationLongitude');
+
+                    inputLatitude.val(palce.geometry.location.lat());
+                    inputLongitude.val(palce.geometry.location.lng());
+                });
+            }
+        });
+
+         $(document).ready(function () {
+             autocompleteLocationFrom = new google.maps.places.Autocomplete((document.getElementById(locationFrom)), {
+                 types: ['geocode', 'establishment'],
+                 componentRestrictions: { country: "vn" }
+            });
+
+             google.maps.event.addListener(autocompleteLocationFrom, 'place_changed', function () {
+                 var palce = autocompleteLocationFrom.getPlace();
+                 document.getElementById('LatitudeLocationFrom').value = palce.geometry.location.lat();
+                 document.getElementById('LongitudeLocationFrom').value = palce.geometry.location.lng();
+             });
 
 
-        //     autocompleteLocationTo = new google.maps.places.Autocomplete((document.getElementById(locationTo)), {
-        //         types: ['geocode']
-        //     });
+             autocompleteLocationTo = new google.maps.places.Autocomplete((document.getElementById(locationTo)), {
+                 types: ['geocode', 'establishment'],
+                 componentRestrictions: { country: "vn" }
+             });
 
-        //     google.maps.event.addListener(autocompleteLocationTo, 'place_changed', function () {
-        //         var palce = autocompleteLocationTo.getPlace();
-        //         document.getElementById('LatitudeLocationTo').value = palce.geometry.location.lat();
-        //         document.getElementById('LongitudeLocationTo').value = palce.geometry.location.lng();
-        //     });
-        //});
+             google.maps.event.addListener(autocompleteLocationTo, 'place_changed', function () {
+                 var palce = autocompleteLocationTo.getPlace();
+                 document.getElementById('LatitudeLocationTo').value = palce.geometry.location.lat();
+                 document.getElementById('LongitudeLocationTo').value = palce.geometry.location.lng();
+             });
+        });
     </script>
 }

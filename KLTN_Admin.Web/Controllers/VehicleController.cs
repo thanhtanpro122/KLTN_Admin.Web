@@ -73,9 +73,16 @@ namespace KLTN_Admin.Web.Controllers
             foreach (var pair in data.NumberSeats)
             {
                 var temp = pair.Split('-', StringSplitOptions.RemoveEmptyEntries);
-                if (temp != null && temp.Length == 2 && int.TryParse(temp[0], out var index))
+                if (int.TryParse(temp[0], out var index))
                 {
-                    seatMap.Add((index, temp[1]));
+                    if (temp != null && temp.Length == 2)
+                    {
+                        seatMap.Add((index, temp[1]));
+                    }
+                    else
+                    {
+                        seatMap.Add((index, string.Empty));
+                    }
                 }
             }
 

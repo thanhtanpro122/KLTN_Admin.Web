@@ -26,7 +26,7 @@ namespace KLTN_Admin.SharedModels
         public LocationSharedModel EndLocation { get; set; }
 
         [JsonProperty("status")]
-        public int Status { get; set; }
+        public ConstSharedModel Status { get; set; }
 
         [JsonProperty("price")]
         public int Price { get; set; }

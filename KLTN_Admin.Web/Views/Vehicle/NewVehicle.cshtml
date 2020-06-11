@@ -80,6 +80,7 @@
             </div>
         </div>
 
+        <label class="dynamic-text">Sơ đồ chỗ ngồi trên xe</label>
         <div id="seat-map">
 
         </div>
@@ -151,7 +152,8 @@
 
         $(document).ready(function () {
             autocompleteStartLocation = new google.maps.places.Autocomplete((document.getElementById(startLocation)), {
-                types: ['geocode']
+                types: ['geocode', 'establishment'],
+                componentRestrictions: { country: "vn" }
             });
 
             google.maps.event.addListener(autocompleteStartLocation, 'place_changed', function () {
@@ -162,7 +164,8 @@
 
 
             autocompleteEndLocation = new google.maps.places.Autocomplete((document.getElementById(endLocation)), {
-                types: ['geocode']
+                types: ['geocode', 'establishment'],
+                componentRestrictions: { country: "vn" }
             });
 
             google.maps.event.addListener(autocompleteEndLocation, 'place_changed', function () {

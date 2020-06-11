@@ -73,9 +73,9 @@
                                 <td>@item.Vehicle.Name</td>
                                 <td>@item.VehicleAgent.Name</td>
                                 <td>
-                                    @if (item.Status == 0)
+                                    @if (item.Status.Value == ConstValues.TrangThaiHanhTrinh.ChuaDi)
                                     {
-                                        <p>Chua hoan thanh</p>
+                                        <p>@item.Status.DisplayValue</p>
                                     }
                                     else
                                     {
@@ -83,7 +83,7 @@
                                     }
                                 </td>
                                 <td>
-                                    @if (item.Status == 0)
+                                    @if (item.Status.Value == ConstValues.TrangThaiHanhTrinh.ChuaDi)
                                     {
                                         <a asp-controller="Route" asp-action="ChangeStatus" asp-route-id="@item.Id" class="btn btn-success change-status">
                                             Change
