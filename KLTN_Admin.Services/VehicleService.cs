@@ -62,7 +62,7 @@ namespace KLTN_Admin.Services
             return _client.Execute<List<VehicleShareModel>>(request).Data;
         }
 
-        public VehicleShareModel GetVehicleById(string vehicleId)
+        public VehicleDetailSharedModel GetVehicleById(string vehicleId)
         {
             var request = new RestRequest("/vehicle/{vehicle_id}", Method.GET);
             request.AddUrlSegment("vehicle_id", vehicleId);
@@ -72,7 +72,7 @@ namespace KLTN_Admin.Services
             {
                 return null;
             }
-            return JsonConvert.DeserializeObject<VehicleShareModel>(response.Content);
+            return JsonConvert.DeserializeObject<VehicleDetailSharedModel>(response.Content);
         }
     }
 }

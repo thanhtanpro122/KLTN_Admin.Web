@@ -7,17 +7,17 @@ namespace KLTN_Admin.Web.ViewModels
 {
     public class VehicleAddViewModel : VehicleViewModel
     {
-        //public string LocationFrom { get; set; }
+        public string[] Location { get; set; }
 
-        //public double LatitudeStartLocation { get; set; }
+        public double[] LatitudeLocation { get; set; }
 
-        //public double LongtitudeStartLocation { get; set; }
+        public double[] LongtitudeLocation { get; set; }
 
-        //public string LocationTo{ get; set; }
+        public string[] LocationProvince { get; set; }
 
-        //public double LatitudeEndLocation { get; set; }
+        public double[] LatitudeProvince { get; set; }
 
-        //public double LongtitudeEndLocation { get; set; }
+        public double[] LongtitudeProvince { get; set; }
 
         public string[] LocationAddStation { get; set; }
 

@@ -1,14 +1,15 @@
 ﻿_mapDrawer = {
     draw: (width, height, orderType, customHtml = '') => {
+        let html = '<label class="dynamic-text">Sơ đồ chỗ ngồi trên xe</label>';
         switch (orderType) {
             case 'trai_qua_phai':
-                return veTraiQuaPhai(width, height, customHtml);
+                return html + veTraiQuaPhai(width, height, customHtml);
             case 'phai_qua_trai':
-                return vePhaiQuaTrai(width, height, customHtml);
+                return html + vePhaiQuaTrai(width, height, customHtml);
             case 'duoi_len_tren':
-                return veDuoiLenTren(width, height, customHtml);
+                return html + veDuoiLenTren(width, height, customHtml);
             case 'tren_xuong_duoi':
-                return veTrenXuongDuoi(width, height, customHtml);
+                return html + veTrenXuongDuoi(width, height, customHtml);
         }
 
         return '';

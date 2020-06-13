@@ -6,17 +6,29 @@ namespace KLTN_Admin.SharedModels
 {
     public class VehicleAddSharedModel : VehicleShareModel
     {
-        public string LocationFrom { get; set; }
+        public string[] Location { get; set; }
 
-        public double LatitudeStartLocation { get; set; }
+        public double[] LatitudeLocation { get; set; }
 
-        public double LongtitudeStartLocation { get; set; }
+        public double[] LongtitudeLocation { get; set; }
 
-        public string LocationTo { get; set; }
+        public string[] LocationProvince { get; set; }
 
-        public double LatitudeEndLocation { get; set; }
+        public double[] LatitudeProvince { get; set; }
 
-        public double LongtitudeEndLocation { get; set; }
+        public double[] LongtitudeProvince { get; set; }
+
+        public string[] LocationAddStation { get; set; }
+
+        public double[] LatitudeLocationAddStation { get; set; }
+
+        public double[] LongitudeLocationAddStation { get; set; }
+
+        public string[] LocationAddProvince { get; set; }
+
+        public double[] LatitudeLocationAddProvince { get; set; }
+
+        public double[] LongitudeLocationAddProvince { get; set; }
 
         public string VehicleType { get; set; }
 

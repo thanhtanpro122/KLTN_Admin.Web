@@ -49,8 +49,8 @@
                 </select>
             </div>
             <div class="col-4 form-group">
-                <div class="form-check check_isonline">
-                    <input class="form-check-input" type="checkbox" id="IsOnline">
+                <div class="check_isonline">
+                    <input class="form-check-input" type="checkbox" checked id="IsOnline">
                     <label class="form-check-label" for="IsOnline">
                         IsOnline
                     </label>
@@ -79,31 +79,31 @@
         <div class="form-row">
             <div class="col-6 form-group">
                 <label asp-for="StartLocation"></label>
-                <input type="text" id="StartLocation" name="LocationAddStation" class="form-control location_GGMap" />
-                <input type="text" hidden class="locationLatitude" name="LatitudeLocationAddStation" />
-                <input type="text" hidden class="locationLongitude" name="LongitudeLocationAddStation" />
+                <input type="text" id="StartLocation" name="Location" class="form-control" />
+                <input type="text"  class="locationLatitude" name="LatitudeLocation" />
+                <input type="text"  class="locationLongitude" name="LongtitudeLocation" />
             </div>
 
             <div class="col-6 form-group">
                 <label asp-for="StartProvince"></label>
-                <input type="text" id="StartProvince" name="LocationAddProvince" class="form-control location_GGMapCities" />
-                <input type="text" hidden class="locationLatitude"  name="LatitudeLocationAddProvince"  />
-                <input type="text" hidden class="locationLongitude" name="LongitudeLocationAddProvince" />
+                <input type="text" id="StartProvince" name="LocationProvince" class="form-control" />
+                <input type="text"  class="locationLatitude"  name="LatitudeProvince"  />
+                <input type="text"  class="locationLongitude" name="LongtitudeProvince" />
             </div>
         </div>
         <div class="form-row">
             <div class="col-6 form-group">
                 <label asp-for="EndLocation"></label>
-                <input type="text" id="EndLocation" name="LocationAddStation" class="form-control location_GGMap" />
-                <input type="text" hidden class="locationLatitude" name="LatitudeLocationAddStation" />
-                <input type="text" hidden class="locationLongitude" name="LongitudeLocationAddStation" />
+                <input type="text" id="EndLocation" name="Location" class="form-control" />
+                <input type="text"  class="locationLatitude" name="LatitudeLocation" />
+                <input type="text"  class="locationLongitude" name="LongtitudeLocation" />
             </div>
 
             <div class="col-6 form-group">
                 <label asp-for="EndProvince"></label>
-                <input type="text" id="EndProvince" name="LocationAddProvince" class="form-control location_GGMapCities" />
-                <input type="text" hidden class="locationLatitude"  name="LatitudeLocationAddProvince" />
-                <input type="text" hidden class="locationLongitude" name="LongitudeLocationAddProvince" />
+                <input type="text" id="EndProvince" name="LocationProvince" class="form-control" />
+                <input type="text"  class="locationLatitude"  name="LatitudeProvince" />
+                <input type="text"  class="locationLongitude" name="LongtitudeProvince" />
             </div>
         </div>
 
@@ -114,7 +114,6 @@
         <input class="btn btn-info add-station-vehicle" value="Thêm trạm dừng" />
         <br />
 
-        <label class="dynamic-text">Sơ đồ chỗ ngồi trên xe</label>
         <div id="seat-map">
 
         </div>
@@ -135,10 +134,15 @@
         var autocompleteStartLocation, autocompleteEndLocation;
 
         function drawMapByVehicleTypeAndAgent() {
+            if (!$('#IsOnline').is(':checked')) {
+                return;
+            }
+
             let agentId = $('#VehicleAgent').val();
             let vehicleTypeId = $('#VehicleType').val();
 
             $.get('/Vehicle/GetMap', { agentId: agentId, vehicleType: vehicleTypeId }, data => {
+                $('#seat-map').html('');
                 if (data) {
                     let customHtml = `
                             <input type="hidden" class="seat-index" value="{number}" />
@@ -187,7 +191,7 @@
         function autoCompleteGooogleMap() {
             var acInputs = document.getElementsByClassName("location_GGMap");
 
-            for (var i = 0; i < acInputs.length; i++) {
+            for (let i = 0; i < acInputs.length; i++) {
 
                 var autocomplete = new google.maps.places.Autocomplete(acInputs[i], {
                     types: ['geocode', 'establishment'],
@@ -196,7 +200,7 @@
                 autocomplete.inputId = acInputs[i].id;
 
                 google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                    var palce = autocomplete.getPlace();
+                    let palce = autocomplete.getPlace();
 
                     let parent = $(`#` + this.inputId).closest('div');
                     let inputLatitude = parent.find('input.locationLatitude');
@@ -211,16 +215,16 @@
         function autoCompleteGooogleMapCities() {
             var acInputs = document.getElementsByClassName("location_GGMapCities");
 
-            for (var i = 0; i < acInputs.length; i++) {
+            for (let i = 0; i < acInputs.length; i++) {
 
-                var autocomplete = new google.maps.places.Autocomplete(acInputs[i], {
+                let autocomplete = new google.maps.places.Autocomplete(acInputs[i], {
                     types: ['(cities)'],
                     componentRestrictions: { country: "vn" }
                 });
                 autocomplete.inputId = acInputs[i].id;
 
                 google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                    var palce = autocomplete.getPlace();
+                    let palce = autocomplete.getPlace();
 
                     let parent = $(`#` + this.inputId).closest('div');
                     let inputLatitude = parent.find('input.locationLatitude');
@@ -232,20 +236,58 @@
             }
         };
 
+        function setLatAndLongLocation(id) {
+            let autocomplete = new google.maps.places.Autocomplete(document.getElementById(id), {
+                types: ['geocode', 'establishment'],
+                componentRestrictions: { country: "vn" }
+            });
+            autocomplete.inputId = id;
+
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                let palce = autocomplete.getPlace();
+
+                let parent = $(`#` + this.inputId).closest('div');
+                let inputLatitude = parent.find('input.locationLatitude');
+                let inputLongitude = parent.find('input.locationLongitude');
+
+                inputLatitude.val(palce.geometry.location.lat());
+                inputLongitude.val(palce.geometry.location.lng());
+            });
+        }
+
+        function setLatAndLongLocationProvince(id) {
+            let autocomplete = new google.maps.places.Autocomplete(document.getElementById(id), {
+                types: ['(cities)'],
+                componentRestrictions: { country: "vn" }
+            });
+            autocomplete.inputId = id;
+
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                let palce = autocomplete.getPlace();
+
+                let parent = $(`#` + this.inputId).closest('div');
+                let inputLatitude = parent.find('input.locationLatitude');
+                let inputLongitude = parent.find('input.locationLongitude');
+
+                inputLatitude.val(palce.geometry.location.lat());
+                inputLongitude.val(palce.geometry.location.lng());
+            });
+        }
+
         $(".add-station-vehicle").on("click", () => {
             var customHtml = `
                 <div class="form-row">
                 <div class="col-6 form-group">
                     <label >Trạm dừng</label>
                     <input type="text" id="LocationAddStation${new Date().getMilliseconds()}" name="LocationAddStation" class="form-control location_GGMap" />
-                    <input type="text" hidden class="locationLatitude" name="LatitudeLocationAddStation" />
-                    <input type="text" hidden class="locationLongitude" name="LongitudeLocationAddStation" />
+                    <input type="text"  class="locationLatitude" name="LatitudeLocationAddStation" />
+                    <input type="text"  class="locationLongitude" name="LongitudeLocationAddStation" />
                 </div>
                 <div class="col-6 form-group">
                     <label >Tỉnh, Thành phố</label>
                     <input type="text" id="LocationAddProvince${new Date().getMilliseconds()}" name="LocationAddProvince" class="form-control location_GGMapCities" />
-                    <input type="text" hidden class="locationLatitude"  name="LatitudeLocationAddProvince" />
-                    <input type="text" hidden class="locationLongitude" name="LongitudeLocationAddProvince" />
+                    <input type="text"  class="locationLatitude"  name="LatitudeLocationAddProvince" />
+                    <input type="text"  class="locationLongitude" name="LongitudeLocationAddProvince" />
                 </div>
                 </div>
             `;
@@ -257,9 +299,20 @@
             autoCompleteGooogleMapCities();
         });
 
+        $('#IsOnline').on('change', e => {
+            if (!$(e.target).is(':checked')) {
+                $('#seat-map').html('');
+            } else {
+                drawMapByVehicleTypeAndAgent();
+            }
+        });
+
         $(document).ready(function () {
-            autoCompleteGooogleMap();
-            autoCompleteGooogleMapCities();
+            setLatAndLongLocation("StartLocation");
+            setLatAndLongLocation("EndLocation");
+            setLatAndLongLocationProvince("StartProvince");
+            setLatAndLongLocationProvince("EndProvince");
+
 
             $('#VehicleType').on('change', () => {
                 drawMapByVehicleTypeAndAgent();

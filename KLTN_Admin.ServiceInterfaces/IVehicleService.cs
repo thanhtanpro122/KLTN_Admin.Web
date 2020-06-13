@@ -9,7 +9,7 @@ namespace KLTN_Admin.ServiceInterfaces
     {
         List<VehicleShareModel> GetListVehicle();
 
-        VehicleShareModel GetVehicleById(string vehicleId);
+        VehicleDetailSharedModel GetVehicleById(string vehicleId);
 
         bool CreateVehicle(VehicleShareModel vehicle);
 

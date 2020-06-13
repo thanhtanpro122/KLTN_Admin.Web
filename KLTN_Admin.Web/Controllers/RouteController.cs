@@ -64,6 +64,16 @@ namespace KLTN_Admin.Web.Controllers
             return Json(agents);
         }
 
+        public JsonResult GetDataVehicleAndListStation(string vehicleId)
+        {
+            var data = _vehicleService.GetVehicleById(vehicleId);
+            if (data == null)
+            {
+                return Json(null);
+            }
+            return Json(data);
+        }
+
         public JsonResult GetListLocation()
         {
             var locations= _locationService.GetListLocation();
@@ -82,47 +92,47 @@ namespace KLTN_Admin.Web.Controllers
             return Json(null);
         }
 
-        [HttpPost]
-        public IActionResult Create(RouteAddViewModel route)
-        {
-            //route.DepartureDate = route.DepartureDate.Date;
-            //route.Status = 0;
-            var vehicle = _vehicleService.GetVehicleById(route.VehicleId);
-            if (vehicle == null)
-            {
-                return NotFound();
-            }
+        //[HttpPost]
+        //public IActionResult Create(RouteAddViewModel route)
+        //{
+        //    //route.DepartureDate = route.DepartureDate.Date;
+        //    //route.Status = 0;
+        //    var vehicle = _vehicleService.GetVehicleById(route.VehicleId);
+        //    if (vehicle == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            route.StartLocation = new LocationViewModel()
-            {
-                Id = vehicle.StartLocation.Id
-            };
-            route.EndLocation = new LocationViewModel()
-            {
-                Id = vehicle.EndLocation.Id
-            };
-            //route.StartLocation.Id = vehicle.StartLocation.Id;
-            //route.EndLocation.Id = vehicle.EndLocation.Id;
-            route.Vehicle = new VehicleViewModel()
-            {
-                Id = vehicle.Id
-            };
+        //    route.StartLocation = new LocationViewModel()
+        //    {
+        //        Id = vehicle.StartLocation.Id
+        //    };
+        //    route.EndLocation = new LocationViewModel()
+        //    {
+        //        Id = vehicle.EndLocation.Id
+        //    };
+        //    //route.StartLocation.Id = vehicle.StartLocation.Id;
+        //    //route.EndLocation.Id = vehicle.EndLocation.Id;
+        //    route.Vehicle = new VehicleViewModel()
+        //    {
+        //        Id = vehicle.Id
+        //    };
 
-            var listconst = _mapper.Map<List<ConstViewModel>>(_constService.GetListConst());
-            var constSelect = listconst.FirstOrDefault(e => e.Type == Consts.TrangThaiHanhTrinh && e.Value == ConstValues.TrangThaiHanhTrinh.ChuaDi);
+        //    var listconst = _mapper.Map<List<ConstViewModel>>(_constService.GetListConst());
+        //    var constSelect = listconst.FirstOrDefault(e => e.Type == Consts.TrangThaiHanhTrinh && e.Value == ConstValues.TrangThaiHanhTrinh.ChuaDi);
 
-            //route.Status = new ConstViewModel()
-            //{
-            //    Id = constSelect.Id
-            //};
+        //    //route.Status = new ConstViewModel()
+        //    //{
+        //    //    Id = constSelect.Id
+        //    //};
 
-            var flag = _routeService.CreateRoute(_mapper.Map<RouteSharedModel>(route));
-            if (!flag)
-            {
-                return NotFound();
-            }
-            return RedirectToAction("Index");
-        }
+        //    var flag = _routeService.CreateRoute(_mapper.Map<RouteSharedModel>(route));
+        //    if (!flag)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return RedirectToAction("Index");
+        //}
         [HttpGet]
         public IActionResult Edit(string id)
         {

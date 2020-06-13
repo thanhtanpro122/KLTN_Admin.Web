@@ -3,20 +3,27 @@
 
 }
 
+<style>
+    .ui-autocomplete.ui-front {
+        z-index: 2147483647 !important;
+    }
+</style>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 <div class="container">
     <form method="post" asp-controller="Route" asp-action="NewRoute" id="form-add-route">
         <label class="dynamic-text">Thông tin hành trình</label>
         <div class="form-row">
             <div class="col-4 form-group">
                 <label>Chọn xe</label>
-                <input type="text" asp-for="VehicleId" class="form-control" hidden />
+                <input type="text" asp-for="VehicleId" class="form-control" />
                 <input type="text" class="form-control" id="vehicle_create" name="xe" placeholder="Chọn xe">
             </div>
             <div class="col-8 form-group">
                 <label>Tuyến</label>
-                <input type="text" asp-for="VehicleId" readonly class="form-control" />
+                <input type="text" id="Route" readonly class="form-control" />
             </div>
-            
+
         </div>
         <div class="form-row">
             <div class="col-4 form-group">
@@ -44,12 +51,94 @@
                 </div>
             </div>
         </div>
+
+        <div id="schedules">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-secondary">
+                    <input type="checkbox" name="Day" value="2"> Thứ 2
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="checkbox" name="Day" value="3"> Thứ 3
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="checkbox" name="Day" value="4"> Thứ 4
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="checkbox" name="Day" value="5"> Thứ 5
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="checkbox" name="Day" value="6"> Thứ 6
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="checkbox" name="Day" value="7"> Thứ 7
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="checkbox" name="Day" value="8"> Chủ nhật
+                </label>
+            </div>
+        </div>
+
+        <div id="route-details">
+            
+        </div>
+
         <input type="submit" class="btn btn-primary" id="btn-submit-add-vehicle" value="Thêm Xe" />
     </form>
 </div>
 
 @section Scripts {
-    <script type="text/javascript">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script>
+        function mapDataVehicleToRoute(data) {
+            console.log(data);
+            $("#Route").val(data.vehicles.startLocation.address + ' - ' + data.vehicles.endLocation.address);
+            let container = $('#route-details');
+            container.html('');
+            data.listStations.forEach((item, index) => {
+                let html = `
+                    <div class="card" style="margin-bottom: 8px;">
+                        <div class="card-body">
+                            <input type="hidden" name="StationId" value="${item._id}" />
+                            <h4 style="font-weight: bold; margin-bottom: 16px;">${item.stationStop.address}</h4>
+                            <div class="row">
+                                <div class="col form-group">
+                                    <label>Thời gian đến trạm dừng</label>
+                                    <input type="number" name="StationTime" class="form-control station-time" ${index == 0 ? 'readonly' : ''} value="${index == 0 ? '0' : ''}" />
+                                </div>
+                                <div class="col form-group">
+                                    <label>Quản đường từ trạm trước đến trạm này</label>
+                                    <input type="number" name="StationDistance" class="form-control distance" ${index == 0 ? 'readonly' : ''} value="${index == 0 ? '0' : ''}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.append(html);
+            });
+        }
+
+        var getDataVehicleAndStation = function (id) {
+            $.ajax({
+                url: "/Route/GetDataVehicleAndListStation",
+                data: { vehicleId: id },
+                type: "GET",
+                contentType: "json",
+                success: function (data) {
+                    mapDataVehicleToRoute(data);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                    console.log(response)
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                    console.log(response);
+                }
+            });
+        };
+
+
         var getSuggestionVehicle = function () {
             $.ajax({
                 url: "/Route/GetListVehicle",
@@ -76,7 +165,7 @@
                             $("#VehicleId").val(
                                 bienso[bienso.map(r => r.name).indexOf(selection)].id
                             );
-                            console.log(bienso[bienso.map(r => r.name).indexOf(selection)].id)
+                            getDataVehicleAndStation(bienso[bienso.map(r => r.name).indexOf(selection)].id);
                             return false;
                         }
                     }).on('focus', () => { $('.ui-autocomplete').addClass('ui-front') }).on('blur', () => { $('.ui-autocomplete').removeClass('ui-front') });
