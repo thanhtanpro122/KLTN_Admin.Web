@@ -22,16 +22,16 @@ namespace KLTN_Admin.SharedModels
         [JsonProperty("startLocation")]
         public LocationSharedModel StartLocation { get; set; }
 
+        [JsonProperty("startProvince")]
+        public LocationSharedModel StartProvince { get; set; }
+
         [JsonProperty("endLocation")]
         public LocationSharedModel EndLocation { get; set; }
 
-        [JsonProperty("status")]
-        public ConstSharedModel Status { get; set; }
+        [JsonProperty("endProvince")]
+        public LocationSharedModel EndProvince { get; set; }
 
         [JsonProperty("price")]
         public int Price { get; set; }
-
-        [JsonProperty("departureDate")]
-        public DateTime DepartureDate { get; set; }
     }
 }

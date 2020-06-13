@@ -11,8 +11,6 @@ namespace KLTN_Admin.Web.ViewModels
         
         public VehicleViewModel Vehicle { get; set; }
 
-        public string VehicleId { get; set; }
-
         public AgentViewModel VehicleAgent { get; set; }
 
         public LocationViewModel VehicleStartLocation { get; set; }
@@ -24,13 +22,13 @@ namespace KLTN_Admin.Web.ViewModels
         public string EndTime { get; set; }
         
         public LocationViewModel StartLocation { get; set; }
-        
-        public LocationViewModel EndLocation { get; set; }    
 
-        public ConstViewModel Status { get; set; }
+        public LocationViewModel StartProvince { get; set; }
+
+        public LocationViewModel EndLocation { get; set; }
+
+        public LocationViewModel EndProvince { get; set; }
         
         public int Price { get; set; }
-        
-        public DateTime DepartureDate { get; set; }
     }
 }

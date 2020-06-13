@@ -15,5 +15,8 @@ namespace KLTN_Admin.SharedModels
 
         [JsonProperty("cancelfee")]
         public int CancelFee { get; set; }
+
+        [JsonProperty("priceToDistance")]
+        public double PriceToDistance { get; set; }
     }
 }

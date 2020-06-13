@@ -1,0 +1,106 @@
+﻿@model RouteAddViewModel
+@{
+
+}
+
+<div class="container">
+    <form method="post" asp-controller="Route" asp-action="NewRoute" id="form-add-route">
+        <label class="dynamic-text">Thông tin hành trình</label>
+        <div class="form-row">
+            <div class="col-4 form-group">
+                <label>Chọn xe</label>
+                <input type="text" asp-for="VehicleId" class="form-control" hidden />
+                <input type="text" class="form-control" id="vehicle_create" name="xe" placeholder="Chọn xe">
+            </div>
+            <div class="col-8 form-group">
+                <label>Tuyến</label>
+                <input type="text" asp-for="VehicleId" readonly class="form-control" />
+            </div>
+            
+        </div>
+        <div class="form-row">
+            <div class="col-4 form-group">
+                <label asp-for="Price"></label>
+                <input type="text" class="form-control" asp-for="Price" placeholder="Giá vé">
+            </div>
+            <div class="col-4 form-group">
+                <label>Giờ đi</label>
+                <div class="input-group date" id="ThoiGianKhoiHanh_Create" data-target-input="nearest">
+                    <div class="input-group" data-target="#ThoiGianKhoiHanh_Create" data-toggle="datetimepicker">
+                        <input type="text" id="StartTime" name="StartTime" placeholder="Thời gian đến" class="form-control datetimepicker-input" data-target="#ThoiGianKhoiHanh_Create" />
+                        <div class="input-group-addon input-group-append"><i class="mdi mdi-clock input-group-text"></i></div>
+                    </div>
+                    <span id="validate_GioDi" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-4 form-group">
+                <label for="ThoiGianKetThuc">Giờ đến</label>
+                <div class="input-group date" id="ThoiGianKetThuc_Create" data-target-input="nearest">
+                    <div class="input-group" data-target="#ThoiGianKetThuc_Create" data-toggle="datetimepicker">
+                        <input type="text" id="EndTime" name="EndTime" placeholder="Thời gian đến" class="form-control datetimepicker-input" data-target="#ThoiGianKetThuc_Create" />
+                        <div class="input-group-addon input-group-append"><i class="mdi mdi-clock input-group-text"></i></div>
+                    </div>
+                    <span id="validate_GioDen" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <input type="submit" class="btn btn-primary" id="btn-submit-add-vehicle" value="Thêm Xe" />
+    </form>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        var getSuggestionVehicle = function () {
+            $.ajax({
+                url: "/Route/GetListVehicle",
+                data: {},
+                type: "GET",
+                contentType: "json",
+                success: function (data) {
+                    console.log(data)
+                    items = [];
+                    bienso = [];
+                    $.each(data, function (i, item) {
+                        var id = item._id;
+                        var xe = item.licensePlates;
+                        bienso.push({
+                            id: id,
+                            name: xe
+                        });
+                    });
+                    $("#vehicle_create").autocomplete({
+                        source: bienso.map(r => r.name),
+                        select: function (event, ui) {
+                            var selection = ui.item.label;
+                            $("#vehicle_create").val(selection);
+                            $("#VehicleId").val(
+                                bienso[bienso.map(r => r.name).indexOf(selection)].id
+                            );
+                            console.log(bienso[bienso.map(r => r.name).indexOf(selection)].id)
+                            return false;
+                        }
+                    }).on('focus', () => { $('.ui-autocomplete').addClass('ui-front') }).on('blur', () => { $('.ui-autocomplete').removeClass('ui-front') });
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                    console.log(response)
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                    console.log(response);
+                }
+            });
+        }();
+
+        $(document).ready(function () {
+            $('#ThoiGianKhoiHanh_Create').datetimepicker({
+                format: 'LT',
+                format: 'HH:mm'
+            });
+            $('#ThoiGianKetThuc_Create').datetimepicker({
+                format: 'LT',
+                format: 'HH:mm'
+            });
+        });
+    </script>
+}

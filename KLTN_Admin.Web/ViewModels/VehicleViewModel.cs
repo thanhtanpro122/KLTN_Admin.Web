@@ -20,11 +20,17 @@ namespace KLTN_Admin.Web.ViewModels
         public string LicensePlates { get; set; }
         
         public LocationViewModel StartLocation { get; set; }
-        
+
+        public LocationViewModel StartProvince { get; set; }
+
         public LocationViewModel EndLocation { get; set; }
-        
+
+        public LocationViewModel EndProvince { get; set; }
+
         public int Status { get; set; }
         
         public AgentViewModel Agent { get; set; }
+
+        public bool IsOnline { get; set; }
     }
 }

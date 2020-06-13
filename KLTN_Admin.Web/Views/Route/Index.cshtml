@@ -21,10 +21,9 @@
                 <div class="table-toolbar">
                     <div style="padding-bottom: 4rem;">
                         <div style="float:left;">
-                            <a>
-                                <button class="btn btn-success" data-toggle="modal"
-                                        data-target="#CreateModal">
-                                    Thêm mới <i class="icon-plus icon-white"></i>
+                            <a asp-controller="Route" asp-action="NewRoute">
+                                <button class="btn btn-success">
+                                    Thêm mới
                                 </button>
                             </a>
                         </div>
@@ -37,7 +36,7 @@
                                 <input type="text" id="xe" name="xe" placeholder="Xe" class="form-control" style="width: auto; display: inline-block" />
                                 <input type="text" id="vehicleId" name="vehicleId" hidden />
 
-                                <input id="startDate" name="startDate" placeholder="Ngày khởi hành" class="form-control" style="width: auto; display: inline-block" />
+                                //<input id="startDate" name="startDate" placeholder="Ngày khởi hành" class="form-control" style="width: auto; display: inline-block" />
                                 <button type="submit" id="btnTimKiem" class="btn btn-default">
                                     <span class="glyphicon glyphicon-search"></span> Search
                                 </button>
@@ -49,12 +48,12 @@
                     <thead>
                         <tr>
                             @*<th>Mã điều hành</th>*@
-                            <th>Ngày khởi hành</th>
+                            @*<th>Ngày khởi hành</th>*@
                             <th>Tuyến xe</th>
                             <th>Thời gian chạy</th>
                             <th>Xe</th>
                             <th>Nhà xe</th>
-                            <th>Đổi trạng thái</th>
+                            @*<th>Đổi trạng thái</th>*@
                             <th>Chỉnh sửa</th>
                             <th>Xóa</th>
                         </tr>
@@ -67,12 +66,12 @@
 
                             <tr>
                                 @*<td>@item.MaDieuHanh</td>*@
-                                <td>@item.DepartureDate.ToString("dd/MM/yyyy")</td>
+                                @*<td>@item.DepartureDate.ToString("dd/MM/yyyy")</td>*@
                                 <td>@tuyen</td>
                                 <td>@thoigian</td>
                                 <td>@item.Vehicle.Name</td>
                                 <td>@item.VehicleAgent.Name</td>
-                                <td>
+                                @*<td>
                                     @if (item.Status.Value == ConstValues.TrangThaiHanhTrinh.ChuaDi)
                                     {
                                         <p>@item.Status.DisplayValue</p>
@@ -81,8 +80,8 @@
                                     {
                                         <p>Hoan thanh</p>
                                     }
-                                </td>
-                                <td>
+                                </td>*@
+                                @*<td>
                                     @if (item.Status.Value == ConstValues.TrangThaiHanhTrinh.ChuaDi)
                                     {
                                         <a asp-controller="Route" asp-action="ChangeStatus" asp-route-id="@item.Id" class="btn btn-success change-status">
@@ -96,7 +95,7 @@
                                         </button>
                                     }
 
-                                </td>
+                                </td>*@
                                 <td>
                                     <a class="btn btn-primary edit-dieuhanh" data-id="@item.Id">
                                         Edit

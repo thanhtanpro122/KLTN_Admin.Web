@@ -42,11 +42,11 @@ namespace KLTN_Admin.Web.Controllers
                 routes = routes.Where(x => x.Vehicle.Id == vehicleId).ToList();
             }
             var datevalid = new DateTime(0001, 1, 1);
-            if (startDate.Date != datevalid)
-            {
-                page = 1;
-                routes = routes.Where(x => x.DepartureDate.Date == startDate.Date).ToList();
-            }
+            //if (startDate.Date != datevalid)
+            //{
+            //    page = 1;
+            //    routes = routes.Where(x => x.DepartureDate.Date == startDate.Date).ToList();
+            //}
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             return View(routes.ToPagedList(pageNumber, pageSize));
@@ -69,10 +69,23 @@ namespace KLTN_Admin.Web.Controllers
             var locations= _locationService.GetListLocation();
             return Json(locations);
         }
+
+        [HttpGet]
+        public IActionResult NewRoute()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult NewRoute(RouteViewModel route)
+        {
+            return Json(null);
+        }
+
         [HttpPost]
         public IActionResult Create(RouteViewModel route)
         {
-            route.DepartureDate = route.DepartureDate.Date;
+            //route.DepartureDate = route.DepartureDate.Date;
             //route.Status = 0;
             var vehicle = _vehicleService.GetVehicleById(route.VehicleId);
             if (vehicle == null)
@@ -98,10 +111,10 @@ namespace KLTN_Admin.Web.Controllers
             var listconst = _mapper.Map<List<ConstViewModel>>(_constService.GetListConst());
             var constSelect = listconst.FirstOrDefault(e => e.Type == Consts.TrangThaiHanhTrinh && e.Value == ConstValues.TrangThaiHanhTrinh.ChuaDi);
 
-            route.Status = new ConstViewModel()
-            {
-                Id = constSelect.Id
-            };
+            //route.Status = new ConstViewModel()
+            //{
+            //    Id = constSelect.Id
+            //};
 
             var flag = _routeService.CreateRoute(_mapper.Map<RouteSharedModel>(route));
             if (!flag)
@@ -135,7 +148,7 @@ namespace KLTN_Admin.Web.Controllers
         [HttpPost]
         public IActionResult Edit(RouteViewModel route)
         {
-            route.DepartureDate = route.DepartureDate.Date;
+            //route.DepartureDate = route.DepartureDate.Date;
             var vehicle = _vehicleService.GetVehicleById(route.Vehicle.Id);
             if (vehicle == null)
             {
@@ -170,10 +183,10 @@ namespace KLTN_Admin.Web.Controllers
                 return NotFound();
             }
 
-            var listconst = _mapper.Map<List<ConstViewModel>>(_constService.GetListConst());
-            var constSelect = listconst.FirstOrDefault(e => e.Type == Consts.TrangThaiHanhTrinh && e.Value == ConstValues.TrangThaiHanhTrinh.DaDi);
+            //var listconst = _mapper.Map<List<ConstViewModel>>(_constService.GetListConst());
+            //var constSelect = listconst.FirstOrDefault(e => e.Type == Consts.TrangThaiHanhTrinh && e.Value == ConstValues.TrangThaiHanhTrinh.DaDi);
 
-            route.Status = constSelect;
+            //route.Status = constSelect;
             var flag = _routeService.EditRoute(_mapper.Map<RouteSharedModel>(route));
             if (!flag)
             {

@@ -31,7 +31,7 @@
     <form method="post" asp-controller="Vehicle" asp-action="NewVehicle" id="form-add-vehicle">
         <label class="dynamic-text">Thông tin xe</label>
         <div class="form-row">
-            <div class="col-8 form-group">
+            <div class="col-4 form-group">
                 <label asp-for="Name"></label>
                 <input type="text" asp-for="Name" class="form-control" />
             </div>
@@ -43,6 +43,14 @@
                         <option value="@item.Id" data-value="@item.Value">@item.DisplayValue</option>
                     }
                 </select>
+            </div>
+            <div class="col-4 form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="IsOnline">
+                    <label class="form-check-label" for="IsOnline">
+                        IsOnline
+                    </label>
+                </div>
             </div>
         </div>
         <div class="form-row">
@@ -66,19 +74,41 @@
         </div>
         <div class="form-row">
             <div class="col-6 form-group">
-                <label asp-for="LocationFrom"></label>
-                <input type="text" asp-for="LocationFrom" class="form-control" />
-                <input type="text" hidden asp-for="LatitudeStartLocation" />
-                <input type="text" hidden asp-for="LongtitudeStartLocation" />
+                <label asp-for="StartLocation"></label>
+                <input type="text" id="StartLocation" name="LocationAddStation" class="form-control location_GGMap" />
+                <input type="text" hidden class="locationLatitude" name="LatitudeLocationAddStation" />
+                <input type="text" hidden class="locationLongitude" name="LongitudeLocationAddStation" />
             </div>
 
             <div class="col-6 form-group">
-                <label asp-for="LocationTo"></label>
-                <input type="text" asp-for="LocationTo" class="form-control" />
-                <input type="text" hidden asp-for="LatitudeEndLocation" />
-                <input type="text" hidden asp-for="LongtitudeEndLocation" />
+                <label asp-for="StartProvince"></label>
+                <input type="text" id="StartProvince" name="LocationAddStation" class="form-control location_GGMap" />
+                <input type="text" hidden class="locationLatitude" name="LatitudeLocationAddStation" />
+                <input type="text" hidden class="locationLongitude" name="LongitudeLocationAddStation" />
             </div>
         </div>
+        <div class="form-row">
+            <div class="col-6 form-group">
+                <label asp-for="EndLocation"></label>
+                <input type="text" id="EndLocation" name="LocationAddStation" class="form-control location_GGMap" />
+                <input type="text" hidden class="locationLatitude" name="LatitudeLocationAddStation" />
+                <input type="text" hidden class="locationLongitude" name="LongitudeLocationAddStation" />
+            </div>
+
+            <div class="col-6 form-group">
+                <label asp-for="EndProvince"></label>
+                <input type="text" id="EndProvince" name="LocationAddStation" class="form-control location_GGMap" />
+                <input type="text" hidden class="locationLatitude" name="LatitudeLocationAddStation" />
+                <input type="text" hidden class="locationLongitude" name="LongitudeLocationAddStation" />
+            </div>
+        </div>
+
+        <div id="fillStation">
+
+        </div>
+
+        <input class="btn btn-info add-station-vehicle" value="Thêm trạm dừng" />
+        <br />
 
         <label class="dynamic-text">Sơ đồ chỗ ngồi trên xe</label>
         <div id="seat-map">
@@ -150,29 +180,73 @@
             return seats.filter(item => item.trim().length > 0).length;
         }
 
+        function autoCompleteGooogleMap() {
+            var acInputs = document.getElementsByClassName("location_GGMap");
+
+            for (var i = 0; i < acInputs.length; i++) {
+
+                var autocomplete = new google.maps.places.Autocomplete(acInputs[i], {
+                    types: ['geocode', 'establishment'],
+                    componentRestrictions: { country: "vn" }
+                });
+                autocomplete.inputId = acInputs[i].id;
+
+                google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                    var palce = autocomplete.getPlace();
+
+                    let parent = $(`#` + this.inputId).closest('div');
+                    let inputLatitude = parent.find('input.locationLatitude');
+                    let inputLongitude = parent.find('input.locationLongitude');
+
+                    inputLatitude.val(palce.geometry.location.lat());
+                    inputLongitude.val(palce.geometry.location.lng());
+                });
+            }
+        };
+
+
+        $(".add-station-vehicle").on("click", () => {
+            var customHtml = `
+                <div class="form-row">
+                <div class="form-group">
+                    <label >Trạm dừng</label>
+                    <input type="text" id="LocationAddStation${new Date().getMilliseconds()}" name="LocationAddStation" class="form-control location_GGMap" />
+                    <input type="text" hidden class="locationLatitude" name="LatitudeLocationAddStation" />
+                    <input type="text" hidden class="locationLongitude" name="LongitudeLocationAddStation" />
+                </div>
+                </div>
+            `;
+            $('#fillStation').append(customHtml);
+        });
+
+        $('#fillStation').bind('DOMSubtreeModified', function () {
+            autoCompleteGooogleMap();
+        });
+
         $(document).ready(function () {
-            autocompleteStartLocation = new google.maps.places.Autocomplete((document.getElementById(startLocation)), {
-                types: ['geocode', 'establishment'],
-                componentRestrictions: { country: "vn" }
-            });
+            autoCompleteGooogleMap();
+            //autocompleteStartLocation = new google.maps.places.Autocomplete((document.getElementById(startLocation)), {
+            //    types: ['geocode', 'establishment'],
+            //    componentRestrictions: { country: "vn" }
+            //});
 
-            google.maps.event.addListener(autocompleteStartLocation, 'place_changed', function () {
-                var palce = autocompleteStartLocation.getPlace();
-                document.getElementById('LatitudeStartLocation').value = palce.geometry.location.lat();
-                document.getElementById('LongtitudeStartLocation').value = palce.geometry.location.lng();
-            });
+            //google.maps.event.addListener(autocompleteStartLocation, 'place_changed', function () {
+            //    var palce = autocompleteStartLocation.getPlace();
+            //    document.getElementById('LatitudeStartLocation').value = palce.geometry.location.lat();
+            //    document.getElementById('LongtitudeStartLocation').value = palce.geometry.location.lng();
+            //});
 
 
-            autocompleteEndLocation = new google.maps.places.Autocomplete((document.getElementById(endLocation)), {
-                types: ['geocode', 'establishment'],
-                componentRestrictions: { country: "vn" }
-            });
+            //autocompleteEndLocation = new google.maps.places.Autocomplete((document.getElementById(endLocation)), {
+            //    types: ['geocode', 'establishment'],
+            //    componentRestrictions: { country: "vn" }
+            //});
 
-            google.maps.event.addListener(autocompleteEndLocation, 'place_changed', function () {
-                var palce = autocompleteEndLocation.getPlace();
-                document.getElementById('LatitudeEndLocation').value = palce.geometry.location.lat();
-                document.getElementById('LongtitudeEndLocation').value = palce.geometry.location.lng();
-            });
+            //google.maps.event.addListener(autocompleteEndLocation, 'place_changed', function () {
+            //    var palce = autocompleteEndLocation.getPlace();
+            //    document.getElementById('LatitudeEndLocation').value = palce.geometry.location.lat();
+            //    document.getElementById('LongtitudeEndLocation').value = palce.geometry.location.lng();
+            //});
 
             $('#VehicleType').on('change', () => {
                 drawMapByVehicleTypeAndAgent();
