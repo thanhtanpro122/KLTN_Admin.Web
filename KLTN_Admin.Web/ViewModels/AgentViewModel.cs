@@ -11,5 +11,8 @@ namespace KLTN_Admin.Web.ViewModels
         
         [Display(Name = "Phí Hủy")]
         public int CancelFee { get; set; }
+
+        [Display(Name = "Giá trên 1km")]
+        public double PriceToDistance { get; set; }
     }
 }

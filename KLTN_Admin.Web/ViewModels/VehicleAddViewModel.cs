@@ -21,9 +21,15 @@ namespace KLTN_Admin.Web.ViewModels
 
         public string[] LocationAddStation { get; set; }
 
+        public string[] LocationAddProvince { get; set; }
+
         public double[] LatitudeLocationAddStation { get; set; }
 
         public double[] LongitudeLocationAddStation { get; set; }
+
+        public double[] LatitudeLocationAddProvince { get; set; }
+
+        public double[] LongitudeLocationAddProvince { get; set; }
 
         public string VehicleType { get; set; }
 

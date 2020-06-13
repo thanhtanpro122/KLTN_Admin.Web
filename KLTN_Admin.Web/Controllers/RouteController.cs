@@ -77,13 +77,13 @@ namespace KLTN_Admin.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult NewRoute(RouteViewModel route)
+        public IActionResult NewRoute(RouteAddViewModel route)
         {
             return Json(null);
         }
 
         [HttpPost]
-        public IActionResult Create(RouteViewModel route)
+        public IActionResult Create(RouteAddViewModel route)
         {
             //route.DepartureDate = route.DepartureDate.Date;
             //route.Status = 0;
