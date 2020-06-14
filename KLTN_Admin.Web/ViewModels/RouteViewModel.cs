@@ -30,5 +30,7 @@ namespace KLTN_Admin.Web.ViewModels
         public LocationViewModel EndProvince { get; set; }
         
         public int Price { get; set; }
+
+        public bool IsCorrectRoute { get; set; }
     }
 }

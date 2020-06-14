@@ -64,13 +64,23 @@ namespace KLTN_Admin.Web.Controllers
             return Json(agents);
         }
 
-        public JsonResult GetDataVehicleAndListStation(string vehicleId)
+        public JsonResult GetDataVehicleAndListStation(string vehicleId, int order)
         {
             var data = _vehicleService.GetVehicleById(vehicleId);
             if (data == null)
             {
                 return Json(null);
             }
+            if (order == 2)
+            {
+                data.Stations = data.Stations.OrderByDescending(e => e.OrderRouteToStation).ToArray();
+            }
+            else
+            {
+                data.Stations = data.Stations.OrderBy(e => e.OrderRouteToStation).ToArray();
+            }
+            
+            
             return Json(data);
         }
 
@@ -89,7 +99,21 @@ namespace KLTN_Admin.Web.Controllers
         [HttpPost]
         public IActionResult NewRoute(RouteAddViewModel route)
         {
-            return Json(null);
+            if(route.CheckCorrectRoute == 2)
+            {
+                route.IsCorrectRoute = false;
+            }
+            else
+            {
+                route.IsCorrectRoute = true;
+            }
+
+            var checkCreate = _routeService.AddRouteDetailAndRouteSchedule(_mapper.Map<RouteAddSharedModel>(route));
+            if (checkCreate)
+            {
+                return NotFound();
+            }
+            return RedirectToAction("Index");
         }
 
         //[HttpPost]

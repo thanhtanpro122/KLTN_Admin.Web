@@ -12,25 +12,32 @@
 
 <div class="container">
     <form method="post" asp-controller="Route" asp-action="NewRoute" id="form-add-route">
+        <input type="number" hidden asp-for="CheckCorrectRoute" class="form-control" value="1" />
         <label class="dynamic-text">Thông tin hành trình</label>
         <div class="form-row">
-            <div class="col-4 form-group">
+            <div class="col-3 form-group">
                 <label>Chọn xe</label>
-                <input type="text" asp-for="VehicleId" class="form-control" />
+                <input type="text" hidden asp-for="VehicleId" class="form-control" />
                 <input type="text" class="form-control" id="vehicle_create" name="xe" placeholder="Chọn xe">
             </div>
-            <div class="col-8 form-group">
+            <div class="col-9 form-group">
                 <label>Tuyến</label>
                 <input type="text" id="Route" readonly class="form-control" />
             </div>
-
         </div>
         <div class="form-row">
-            <div class="col-4 form-group">
+            <div class="col-3 form-group">
+                <label>Đi đúng tuyến/ ngược tuyến</label>
+                <select class="form-control order">
+                    <option value="1">Đúng tuyến</option>
+                    <option value="2">Ngược tuyến</option>
+                </select>
+            </div>
+            <div class="col-3 form-group">
                 <label asp-for="Price"></label>
                 <input type="text" class="form-control" asp-for="Price" placeholder="Giá vé">
             </div>
-            <div class="col-4 form-group">
+            <div class="col-3 form-group">
                 <label>Giờ đi</label>
                 <div class="input-group date" id="ThoiGianKhoiHanh_Create" data-target-input="nearest">
                     <div class="input-group" data-target="#ThoiGianKhoiHanh_Create" data-toggle="datetimepicker">
@@ -40,7 +47,7 @@
                     <span id="validate_GioDi" class="text-danger"></span>
                 </div>
             </div>
-            <div class="col-4 form-group">
+            <div class="col-3 form-group">
                 <label for="ThoiGianKetThuc">Giờ đến</label>
                 <div class="input-group date" id="ThoiGianKetThuc_Create" data-target-input="nearest">
                     <div class="input-group" data-target="#ThoiGianKetThuc_Create" data-toggle="datetimepicker">
@@ -52,7 +59,9 @@
             </div>
         </div>
 
-        <div id="schedules">
+        <div id="schedules" class="form-group">
+            <label class="dynamic-text">Chọn ngày xe chạy</label>
+            <br />
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                 <label class="btn btn-secondary">
                     <input type="checkbox" name="Day" value="2"> Thứ 2
@@ -79,10 +88,10 @@
         </div>
 
         <div id="route-details">
-            
+
         </div>
 
-        <input type="submit" class="btn btn-primary" id="btn-submit-add-vehicle" value="Thêm Xe" />
+        <input type="submit" class="btn btn-primary" id="btn-submit-add-vehicle" value="Thêm Hành Trình Và Thông tin Hành trình" />
     </form>
 </div>
 
@@ -94,12 +103,15 @@
             console.log(data);
             $("#Route").val(data.vehicles.startLocation.address + ' - ' + data.vehicles.endLocation.address);
             let container = $('#route-details');
+            var labelhtml = `<label class="dynamic-text">Danh sách trạm dừng</label><br/>`;
             container.html('');
+            container.append(labelhtml);
             data.listStations.forEach((item, index) => {
                 let html = `
                     <div class="card" style="margin-bottom: 8px;">
                         <div class="card-body">
                             <input type="hidden" name="StationId" value="${item._id}" />
+                            <input type="hidden" name="OrderStation" value="${index+=1}" />
                             <h4 style="font-weight: bold; margin-bottom: 16px;">${item.stationStop.address}</h4>
                             <div class="row">
                                 <div class="col form-group">
@@ -119,9 +131,10 @@
         }
 
         var getDataVehicleAndStation = function (id) {
+            let order = $(".order").children("option:selected").val();
             $.ajax({
                 url: "/Route/GetDataVehicleAndListStation",
-                data: { vehicleId: id },
+                data: { vehicleId: id , order : order},
                 type: "GET",
                 contentType: "json",
                 success: function (data) {
@@ -189,6 +202,12 @@
             $('#ThoiGianKetThuc_Create').datetimepicker({
                 format: 'LT',
                 format: 'HH:mm'
+            });
+
+
+            $(".order").change(function () {
+                $("#CheckCorrectRoute").val($(".order").children("option:selected").val());
+                getDataVehicleAndStation($("#VehicleId").val());
             });
         });
     </script>

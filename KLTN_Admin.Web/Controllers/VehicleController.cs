@@ -70,22 +70,26 @@ namespace KLTN_Admin.Web.Controllers
         public IActionResult NewVehicle(VehicleAddViewModel data)
         {
             var seatMap = new List<(int, string)>();
-            foreach (var pair in data.NumberSeats)
+            data.IsOnline = false;
+            if (!String.IsNullOrEmpty(data.CheckIsOnline))
             {
-                var temp = pair.Split('-', StringSplitOptions.RemoveEmptyEntries);
-                if (int.TryParse(temp[0], out var index))
+                data.IsOnline = true;
+                foreach (var pair in data.NumberSeats)
                 {
-                    if (temp != null && temp.Length == 2)
+                    var temp = pair.Split('-', StringSplitOptions.RemoveEmptyEntries);
+                    if (int.TryParse(temp[0], out var index))
                     {
-                        seatMap.Add((index, temp[1]));
-                    }
-                    else
-                    {
-                        seatMap.Add((index, string.Empty));
+                        if (temp != null && temp.Length == 2)
+                        {
+                            seatMap.Add((index, temp[1]));
+                        }
+                        else
+                        {
+                            seatMap.Add((index, string.Empty));
+                        }
                     }
                 }
             }
-
             var check = _vehicleService.AddVehicleAndSeatMap(_mapper.Map<VehicleAddSharedModel>(data), seatMap);
             if (!check)
             {

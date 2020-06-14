@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace KLTN_Admin.Web.ViewModels
+namespace KLTN_Admin.SharedModels
 {
-    public class RouteAddViewModel :  RouteViewModel
+    public class RouteAddSharedModel : RouteSharedModel
     {
         public string VehicleId { get; set; }
 
@@ -18,7 +17,5 @@ namespace KLTN_Admin.Web.ViewModels
         public double[] OrderStation { get; set; }
 
         public int[] Day { get; set; }
-
-        public int CheckCorrectRoute { get; set; }
     }
 }

@@ -16,5 +16,7 @@ namespace KLTN_Admin.ServiceInterfaces
         bool EditRoute(RouteSharedModel route);
 
         bool DeleteRoute(string routeId);
+
+        bool AddRouteDetailAndRouteSchedule(RouteAddSharedModel data);
     }
 }

@@ -16,6 +16,19 @@ namespace KLTN_Admin.Services
 
         }
 
+        public bool AddRouteDetailAndRouteSchedule(RouteAddSharedModel data)
+        {
+            var request = new RestRequest("/route/addRouteDetailAndRouteSchedule", Method.POST, DataFormat.Json);
+            request.AddJsonBody(data);
+            var response = _client.Execute(request);
+            var statusCode = (int)response.StatusCode;
+            if (statusCode != 200)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public bool CreateRoute(RouteSharedModel route)
         {
             var request = new RestRequest("/route", Method.POST, DataFormat.Json);

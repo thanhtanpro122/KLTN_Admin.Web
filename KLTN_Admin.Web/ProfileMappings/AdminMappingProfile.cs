@@ -31,6 +31,8 @@ namespace KLTN_Admin.Web.ProfileMappings
             CreateMap<VehicleAddSharedModel, VehicleAddViewModel>().ReverseMap();
 
             CreateMap<MapSharedModel, MapViewModel>().ReverseMap();
+
+            CreateMap<RouteAddSharedModel, RouteAddViewModel>().ReverseMap();
         }
     }
 }

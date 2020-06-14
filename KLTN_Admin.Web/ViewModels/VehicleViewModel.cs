@@ -32,5 +32,7 @@ namespace KLTN_Admin.Web.ViewModels
         public AgentViewModel Agent { get; set; }
 
         public bool IsOnline { get; set; }
+
+        public string CheckIsOnline { get; set; }
     }
 }

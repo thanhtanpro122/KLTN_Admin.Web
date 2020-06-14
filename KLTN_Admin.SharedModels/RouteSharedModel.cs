@@ -33,5 +33,8 @@ namespace KLTN_Admin.SharedModels
 
         [JsonProperty("price")]
         public int Price { get; set; }
+
+        [JsonProperty("isCorrectRoute")]
+        public bool IsCorrectRoute { get; set; }
     }
 }

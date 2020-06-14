@@ -18,5 +18,8 @@ namespace KLTN_Admin.SharedModels
 
         [JsonProperty("vehicle")]
         public VehicleShareModel Vehicle { get; set; }
+
+        [JsonProperty("orderRouteToStation")]
+        public int OrderRouteToStation { get; set; }
     }
 }

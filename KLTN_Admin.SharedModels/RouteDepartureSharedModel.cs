@@ -5,7 +5,7 @@ using System.Text;
 
 namespace KLTN_Admin.SharedModels
 {
-    public class RouteuDepartureSharedModel
+    public class RouteDepartureSharedModel
     {
         [JsonProperty("_id")]
         public string Id { get; set; }

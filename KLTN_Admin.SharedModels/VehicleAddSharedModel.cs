@@ -12,6 +12,8 @@ namespace KLTN_Admin.SharedModels
 
         public double[] LongtitudeLocation { get; set; }
 
+        public int[] OrderToStation { get; set; }
+
         public string[] LocationProvince { get; set; }
 
         public double[] LatitudeProvince { get; set; }
@@ -29,6 +31,8 @@ namespace KLTN_Admin.SharedModels
         public double[] LatitudeLocationAddProvince { get; set; }
 
         public double[] LongitudeLocationAddProvince { get; set; }
+
+        public int[] OrderToAddStation { get; set; }
 
         public string VehicleType { get; set; }
 
