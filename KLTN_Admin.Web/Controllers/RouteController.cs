@@ -109,54 +109,13 @@ namespace KLTN_Admin.Web.Controllers
             }
 
             var checkCreate = _routeService.AddRouteDetailAndRouteSchedule(_mapper.Map<RouteAddSharedModel>(route));
-            if (checkCreate)
+            if (!checkCreate)
             {
                 return NotFound();
             }
             return RedirectToAction("Index");
         }
-
-        //[HttpPost]
-        //public IActionResult Create(RouteAddViewModel route)
-        //{
-        //    //route.DepartureDate = route.DepartureDate.Date;
-        //    //route.Status = 0;
-        //    var vehicle = _vehicleService.GetVehicleById(route.VehicleId);
-        //    if (vehicle == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    route.StartLocation = new LocationViewModel()
-        //    {
-        //        Id = vehicle.StartLocation.Id
-        //    };
-        //    route.EndLocation = new LocationViewModel()
-        //    {
-        //        Id = vehicle.EndLocation.Id
-        //    };
-        //    //route.StartLocation.Id = vehicle.StartLocation.Id;
-        //    //route.EndLocation.Id = vehicle.EndLocation.Id;
-        //    route.Vehicle = new VehicleViewModel()
-        //    {
-        //        Id = vehicle.Id
-        //    };
-
-        //    var listconst = _mapper.Map<List<ConstViewModel>>(_constService.GetListConst());
-        //    var constSelect = listconst.FirstOrDefault(e => e.Type == Consts.TrangThaiHanhTrinh && e.Value == ConstValues.TrangThaiHanhTrinh.ChuaDi);
-
-        //    //route.Status = new ConstViewModel()
-        //    //{
-        //    //    Id = constSelect.Id
-        //    //};
-
-        //    var flag = _routeService.CreateRoute(_mapper.Map<RouteSharedModel>(route));
-        //    if (!flag)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return RedirectToAction("Index");
-        //}
+       
         [HttpGet]
         public IActionResult Edit(string id)
         {
