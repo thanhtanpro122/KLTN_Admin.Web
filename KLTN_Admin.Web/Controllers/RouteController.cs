@@ -30,7 +30,11 @@ namespace KLTN_Admin.Web.Controllers
         }
         public IActionResult Index(string agentId, string vehicleId, DateTime startDate, int? page)
         {
-            var routes = _mapper.Map<List<RouteViewModel>>(_routeService.GetListRoute());          
+            if (String.IsNullOrWhiteSpace(Request.Cookies["AdminId"]))
+            {
+                return NotFound();
+            }
+            var routes = _mapper.Map<List<RouteViewModel>>(_routeService.GetListRoute(Request.Cookies["AdminId"]));          
             if (agentId != null)
             {
                 page = 1;
@@ -54,13 +58,21 @@ namespace KLTN_Admin.Web.Controllers
 
         public JsonResult GetListVehicle()
         {
-            var vehicles = _vehicleService.GetListVehicle();
+            if (String.IsNullOrWhiteSpace(Request.Cookies["AdminId"]))
+            {
+                return Json(null);
+            }
+            var vehicles = _vehicleService.GetListVehicle(Request.Cookies["AdminId"]);
             return Json(vehicles);
         }
 
         public JsonResult GetListAgent()
         {
-            var agents = _agentService.GetAllAgent();
+            if (String.IsNullOrWhiteSpace(Request.Cookies["AdminId"]))
+            {
+                return Json(null);
+            }
+            var agents = _agentService.GetAllAgent(Request.Cookies["AdminId"]);
             return Json(agents);
         }
 

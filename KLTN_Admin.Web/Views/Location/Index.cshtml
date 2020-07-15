@@ -49,6 +49,7 @@
                 <table class="table">
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Address</th>
                             <th>Vĩ Độ</th>
                             <th>Kinh Độ</th>
@@ -60,6 +61,7 @@
                         @foreach (var item in Model)
                         {
                             <tr>
+                                <td>@item.Id</td>
                                 <td>@item.Address</td>
                                 <td>@item.CoordLatitude</td>
                                 <td>@item.CoordLongtitude</td>

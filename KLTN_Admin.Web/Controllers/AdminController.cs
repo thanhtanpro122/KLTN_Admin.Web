@@ -24,8 +24,12 @@ namespace KLTN_Admin.Web.Controllers
 
         public IActionResult Index(string searchString, int? page)
         {
-            var model = _mapper.Map<List<AdminViewModel>>(_adminService.GetAllAdmins());
-            var adminLogin = model.FirstOrDefault(e => e.Id == Request.Cookies["AdminId"]);
+            if (String.IsNullOrWhiteSpace(Request.Cookies["AdminId"]))
+            {
+                return NotFound();
+            }
+            var model = _mapper.Map<List<AdminViewModel>>(_adminService.GetAllAdmins(Request.Cookies["AdminId"]));
+             var adminLogin = model.FirstOrDefault(e => e.Id == Request.Cookies["AdminId"]);
             if (adminLogin != null)
             {
                 model.Remove(adminLogin);
@@ -84,20 +88,14 @@ namespace KLTN_Admin.Web.Controllers
                 {
                     AgentId = item,
                     IsCreator = Request.Cookies["AdminId"],
-                    Isroot = false,
+                    Isroot = admin.IsRoot.Any(e => e == item),
                     AdminId = adminNew.Id
                 };
-                foreach(var isroot in admin.IsRoot)
+                
+                var flag = _adminService.CreateManagement(_mapper.Map<ManagementSharedModel>(management));
+                if (!flag)
                 {
-                    if (item == isroot)
-                    {
-                        management.Isroot = true;
-                    }
-                    var flag = _adminService.CreateManagement(_mapper.Map<ManagementSharedModel>(management));
-                    if (!flag)
-                    {
-                        return NotFound();
-                    }
+                    return NotFound();
                 }
             }
             return RedirectToAction("Index");
@@ -170,7 +168,11 @@ namespace KLTN_Admin.Web.Controllers
 
         public IActionResult LoadPartialSelectAgent()
         {
-            var model = _mapper.Map<List<AgentViewModel>>(_agentService.GetAllAgent());
+            if (String.IsNullOrWhiteSpace(Request.Cookies["AdminId"]))
+            {
+                return NotFound();
+            }
+            var model = _mapper.Map<List<AgentViewModel>>(_agentService.GetAgentsByAdminRoot(Request.Cookies["AdminId"]));
 
             return PartialView("Partials/_SelectAgent", model);
         }

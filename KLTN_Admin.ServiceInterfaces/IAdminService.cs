@@ -7,7 +7,7 @@ namespace KLTN_Admin.ServiceInterfaces
 {
     public interface IAdminService
     {
-        List<AdminSharedModel> GetAllAdmins();
+        List<AdminSharedModel> GetAllAdmins(string adminId);
 
         AdminSharedModel GetAdminById(string adminId);
 

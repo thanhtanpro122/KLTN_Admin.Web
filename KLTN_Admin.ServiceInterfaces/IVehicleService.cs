@@ -7,7 +7,7 @@ namespace KLTN_Admin.ServiceInterfaces
 {
     public interface IVehicleService
     {
-        List<VehicleShareModel> GetListVehicle();
+        List<VehicleShareModel> GetListVehicle(string adminId);
 
         VehicleDetailSharedModel GetVehicleById(string vehicleId);
 

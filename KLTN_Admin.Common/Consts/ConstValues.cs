@@ -25,6 +25,8 @@
             public const string Trong = "trong";
 
             public const string DaDat = "da_dat";
+
+            public const string GiuCho = "giu_cho";
         }
 
         public static class TrangThaiHanhTrinh

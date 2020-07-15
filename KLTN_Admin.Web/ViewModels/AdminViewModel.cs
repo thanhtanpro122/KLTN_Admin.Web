@@ -19,7 +19,7 @@ namespace KLTN_Admin.Web.ViewModels
 
         public string[] AgentId { get; set; }
 
-        public string[] IsRoot { get; set; }
+        public string[] IsRoot { get; set; } = new string[0];
 
         public string[] AgentName { get; set; }
 

@@ -25,7 +25,11 @@ namespace KLTN_Admin.Web.Controllers
 
         public IActionResult Index(string searchString, int? page)
         {
-            var model = _mapper.Map<List<VehicleViewModel>>(_vehicleService.GetListVehicle());
+            if (String.IsNullOrWhiteSpace(Request.Cookies["AdminId"]))
+            {
+                return NotFound();
+            }
+            var model = _mapper.Map<List<VehicleViewModel>>(_vehicleService.GetListVehicle(Request.Cookies["AdminId"]));
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             return View(model.ToPagedList(pageNumber, pageSize));
@@ -37,7 +41,11 @@ namespace KLTN_Admin.Web.Controllers
             var addtionalAgentData = _agentService.GetAddtionlAgentData();
             ViewBag.VehicleTypes = addtionalAgentData.VehicleAndOrderTypes.Where(e => e.Type == Consts.LoaiXe);
 
-            ViewBag.ListAgent = _mapper.Map<List<AgentViewModel>>(_agentService.GetAllAgent());
+            if (String.IsNullOrWhiteSpace(Request.Cookies["AdminId"]))
+            {
+                return NotFound();
+            }
+            ViewBag.ListAgent = _mapper.Map<List<AgentViewModel>>(_agentService.GetAllAgent(Request.Cookies["AdminId"]));
 
 
             return View();

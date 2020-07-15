@@ -16,9 +16,10 @@ namespace KLTN_Admin.Services
 
         }
 
-        public List<AdminSharedModel> GetAllAdmins()
+        public List<AdminSharedModel> GetAllAdmins(string adminId)
         {
-            var request = new RestRequest("/admin", Method.GET);
+            var request = new RestRequest("/admin-by-agent/{admin_id}", Method.GET);
+            request.AddUrlSegment("admin_id", adminId);
             return _client.Execute<List<AdminSharedModel>>(request).Data;
         }
 
@@ -90,6 +91,7 @@ namespace KLTN_Admin.Services
         {
             var token = "";
             var adminid = "";
+            var isRootAdmin = "";
             var request = new RestRequest("/admin/signin", Method.POST, DataFormat.Json);
             request.AddJsonBody(new { username = textusername, password = textpassword });
             var response = _client.Execute(request);
@@ -99,9 +101,10 @@ namespace KLTN_Admin.Services
             {
                 token = resJson.token;
                 adminid = resJson.id;
+                isRootAdmin = resJson.isRootAdmin.Value ? "1" : "0";
                 var test = new string[]
                 {
-                    token,adminid
+                    token,adminid,isRootAdmin
                 };
                 return test;
             }

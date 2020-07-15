@@ -7,7 +7,9 @@ namespace KLTN_Admin.ServiceInterfaces
 {
     public interface IAgentService
     {
-        List<AgentSharedModel> GetAllAgent();
+        List<AgentSharedModel> GetAllAgent(string adminId);
+
+        List<AgentSharedModel> GetAgentsByAdminRoot(string adminId);
 
         AgentSharedModel GetAgentById(string agentId);
 

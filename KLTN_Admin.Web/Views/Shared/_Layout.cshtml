@@ -65,12 +65,12 @@
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <ul class="nav">
                     <li class="nav-item @((string)ViewData["Page"] == "DashBoard" ? "active" : "")">
-                        <a class="nav-link" href="/Admin/DashBoard/Index">
+                        <a class="nav-link" href="/DashBoard/Index">
                             <i class="mdi mdi-compass-outline menu-icon"></i>
                             <span class="menu-title">Dashboard</span>
                         </a>
                     </li>
-                    @if (Context.Request.Cookies["AdminType"] == "0")
+                    @if (Context.Request.Cookies["isRootAdmin"] == "1")
                     {
                         <li class="nav-item @((string)ViewData["Page"] == "Admin" ? "active" : "")">
                             <a class="nav-link" href="/Admin/Index">
@@ -79,22 +79,16 @@
                             </a>
                         </li>
                     }
-                    @*<li class="nav-item @((string)ViewData["Page"] == "NguoiDung" ? "active" : "")">
-                        <a class="nav-link" href="/NguoiDung/Index">
-                            <i class="mdi mdi-account-search menu-icon"></i>
-                            <span class="menu-title">Người dùng</span>
+                    <li class="nav-item @((string)ViewData["Page"] == "Operating" ? "active" : "")">
+                        <a class="nav-link" href="/Operating/Index">
+                            <i class="mdi mdi-speedometer menu-icon"></i>
+                            <span class="menu-title">Điều hành</span>
                         </a>
-                    </li>*@
-                    @*<li class="nav-item @((string)ViewData["Page"] == "DatVe" ? "active" : "")">
-                            <a class="nav-link active" href="/Admin/ThongTinDatVe/Index">
-                                <i class="mdi mdi-file-document-box menu-icon"></i>
-                                <span class="menu-title">Thông tin đặt vé</span>
-                            </a>
-                        </li>*@
+                    </li>
                     <li class="nav-item @((string)ViewData["Page"] == "Route" ? "active" : "")">
                         <a class="nav-link" href="/Route/Index">
                             <i class="mdi mdi-speedometer menu-icon"></i>
-                            <span class="menu-title">Điều hành</span>
+                            <span class="menu-title">Hành trình</span>
                         </a>
                     </li>
                     <li class="nav-item @((string)ViewData["Page"] == "Agent" ? "active" : "")">
@@ -109,19 +103,22 @@
                             <span class="menu-title">Xe</span>
                         </a>
                     </li>
-                    <li class="nav-item @((string)ViewData["Page"] == "Location" ? "active" : "")">
-                        <a class="nav-link" href="/Location/Index">
-                            <i class="mdi mdi-map-marker menu-icon"></i>
-                            <span class="menu-title">Location</span>
-                        </a>
-                    </li>
-                    <li class="nav-item @((string)ViewData["Page"] == "Const" ? "active" : "")">
-                        <a class="nav-link" href="/Const/Index">
-                            <i class="mdi mdi-format-list-numbers menu-icon"></i>
-                            <span class="menu-title">Hằng số</span>
-                        </a>
-                    </li>
-                </ul>
+                    @if (Context.Request.Cookies["UserName"] == "root")
+                    {
+                        <li class="nav-item @((string)ViewData["Page"] == "Location" ? "active" : "")">
+                            <a class="nav-link" href="/Location/Index">
+                                <i class="mdi mdi-map-marker menu-icon"></i>
+                                <span class="menu-title">Location</span>
+                            </a>
+                        </li>
+                        <li class="nav-item @((string)ViewData["Page"] == "Const" ? "active" : "")">
+                            <a class="nav-link" href="/Const/Index">
+                                <i class="mdi mdi-format-list-numbers menu-icon"></i>
+                                <span class="menu-title">Hằng số</span>
+                            </a>
+                        </li>
+                    }
+                    </ul>
             </nav>
             <!-- partial -->
             <div class="main-panel">

@@ -7,7 +7,7 @@ namespace KLTN_Admin.ServiceInterfaces
 {
     public interface IRouteService
     {
-        List<RouteSharedModel> GetListRoute();
+        List<RouteSharedModel> GetListRoute(string adminId);
 
         RouteSharedModel GetRouteById(string routeId);
 
@@ -18,5 +18,13 @@ namespace KLTN_Admin.ServiceInterfaces
         bool DeleteRoute(string routeId);
 
         bool AddRouteDetailAndRouteSchedule(RouteAddSharedModel data);
+
+        List<RouteDepartureSharedModel> GetRouteDepartures(string adminId);
+
+        List<BookingSharedModel> GetBookingsByRouteDepartureId(string routeDepartureId);
+
+        bool PaymentToBookingCode(string bookingCode);
+
+        bool RemoveToBookingCode(string bookingCode);
     }
 }

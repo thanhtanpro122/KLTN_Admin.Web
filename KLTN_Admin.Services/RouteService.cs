@@ -69,9 +69,27 @@ namespace KLTN_Admin.Services
             return true;
         }
 
-        public List<RouteSharedModel> GetListRoute()
+        public List<BookingSharedModel> GetBookingsByRouteDepartureId(string routeDepartureId)
         {
-            var request = new RestRequest("/route", Method.GET);
+            var request = new RestRequest("/listbooking/{routeDeparture_id}", Method.GET);
+            request.AddUrlSegment("routeDeparture_id", routeDepartureId);
+            var response = _client.Execute(request);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var data = response.Content;
+                if (!string.IsNullOrWhiteSpace(data))
+                {
+                    return JsonConvert.DeserializeObject<List<BookingSharedModel>>(data);
+                }
+            }
+            return null;
+        }
+
+        public List<RouteSharedModel> GetListRoute(string adminId)
+        {
+            var request = new RestRequest("/route-by-agent/{admin_id}", Method.GET);
+            request.AddUrlSegment("admin_id", adminId);
+
             var response = _client.Execute(request);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
@@ -96,6 +114,51 @@ namespace KLTN_Admin.Services
                 return null;
             }
             return JsonConvert.DeserializeObject<RouteSharedModel>(response.Content);
+        }
+
+        public List<RouteDepartureSharedModel> GetRouteDepartures(string adminId)
+        {
+            var request = new RestRequest("/routeDeparture-by-agent/{admin_id}", Method.GET);
+            request.AddUrlSegment("admin_id", adminId);
+
+            var response = _client.Execute(request);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var data = response.Content;
+                if (!string.IsNullOrWhiteSpace(data))
+                {
+                    return JsonConvert.DeserializeObject<List<RouteDepartureSharedModel>>(data);
+                }
+            }
+
+            return null;
+        }
+
+        public bool PaymentToBookingCode(string bookingcode)
+        {
+            var request = new RestRequest("/adminpayment", Method.POST, DataFormat.Json);
+            request.AddJsonBody(new
+            {
+                bookingCode = bookingcode
+            });
+            var response = _client.Execute(request);
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool RemoveToBookingCode(string bookingCode)
+        {
+            var request = new RestRequest("/removeTicket/{bookingcode}", Method.POST, DataFormat.Json);
+            request.AddUrlSegment("bookingcode", bookingCode);
+            var response = _client.Execute(request);
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

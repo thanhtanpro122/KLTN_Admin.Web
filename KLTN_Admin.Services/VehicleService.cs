@@ -56,9 +56,10 @@ namespace KLTN_Admin.Services
             throw new NotImplementedException();
         }
 
-        public List<VehicleShareModel> GetListVehicle()
+        public List<VehicleShareModel> GetListVehicle(string adminId)
         {
-            var request = new RestRequest("/vehicle", Method.GET);
+            var request = new RestRequest("/vehicle-by-agent/{admin_id}", Method.GET);
+            request.AddUrlSegment("admin_id", adminId);
             return _client.Execute<List<VehicleShareModel>>(request).Data;
         }
 

@@ -1,0 +1,169 @@
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList
+@using X.PagedList.Mvc.Common
+@model IPagedList<BookingViewModel>
+@{
+    ViewData["Title"] = "Paymnet";
+    ViewData["Page"] = "Paymnet";
+}
+<style>
+    .ui-autocomplete.ui-front {
+        z-index: 2147483647 !important;
+    }
+</style>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<div class="row grid-margin">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Booking</h2>
+                <div class="table-toolbar">
+                    <div style="padding-bottom: 4rem;">
+                        <div style="float:right;">
+                            @using (Html.BeginForm("Payment", "Operating", FormMethod.Post))
+                            {
+                                <input type="text" id="bookingCode" name="bookingCode" placeholder="Booking Code" class="form-control" style="width: auto; display: inline-block" />
+
+                                <button type="submit" id="btnTimKiem" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-search"></span> Search
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Số ghế</th>
+                            <th>Thời gian đặt</th>
+                            <th>Thời gian hết hạn</th>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Code</th>
+                            <th>Status</th>
+                            <th>SeatStatus</th>
+                            <th>Hủy vé</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td>@item.SeatNumber</td>
+                            <td>@item.BookingTime.ToString("MM/dd/yyyy HH:mm")</td>
+                            <td>@item.BookingExpiredTime.ToString("MM/dd/yyyy HH:mm")</td>
+                            <td>@item.BookingInformationName</td>
+                            <td>@item.BookingInformationPhoneNumber</td>
+                            <td>@item.BookingCode</td>
+                            <td>@item.Status.DisplayValue</td>
+                            <td>
+                                @if (item.SeatStatus.Value == ConstValues.TrangThaiGhe.GiuCho)
+                                {
+                                    <a class="btn btn-primary check_payment" data-id="@item.Id" data-bookingcode="@item.BookingCode">
+                                        Thanh Toán
+                                    </a>
+                                }
+                                else
+                                {
+                                    <button disabled class="btn btn-primary check_payment" data-id="@item.Id">
+                                        Đã thanh toán
+                                    </button>
+                                }
+
+                            </td>
+                            <td>
+                                @if (item.Status.Value == ConstValues.TrangThaiDatCho.DaHuy)
+                                {
+                                    <p>Vé đã hủy</p>
+
+                                }
+                                else if (item.Status.Value == ConstValues.TrangThaiDatCho.DaDi)
+                                {
+                                    <p>Đã đi</p>
+                                }
+                                else
+                                {
+                                    <a data-id="@item.Id" data-bookingcode="@item.BookingCode" class="btn btn-danger delete_booking">
+                                        Hủy vé
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+                <div style="float:right;padding-top: 25px;">
+                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                    @(Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions
+                        {
+                            LiElementClasses = new string[] { "page-item" },
+                            PageClasses = new string[] { "page-link" },
+                            UlElementClasses = new string[] { "pagination rounded-flat pagination-success" }
+                        }))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.check_payment').click(function (e) {
+                var result = confirm("Want to payment to booking code?");
+                if (!result) {
+                    e.preventDefault();
+                } else {
+                    $.ajax({
+                        url: "/Operating/PaymentToBookingCode",
+                        data: {
+                            bookingCode: $(this).data("bookingcode")
+                        },
+                        type: "GET",
+                        contentType: "json",
+                        beforeSend: function () {
+                        },
+                        complete: function () {
+                        },
+                        success: function (data) {
+                            location.reload();
+                        },
+                        error: function (response) {
+                            console.log(response)
+                        }
+                    });
+                }
+            });
+            $('.delete_booking').click(function (e) {
+                var result = confirm("Want to delete booking to booking code?");
+                if (!result) {
+                    e.preventDefault();
+                } else {
+                    $.ajax({
+                        url: "/Operating/RemoveToBookingCode",
+                        data: {
+                            bookingCode: $(this).data("bookingcode")
+                        },
+                        type: "GET",
+                        contentType: "json",
+                        beforeSend: function () {
+                        },
+                        complete: function () {
+                        },
+                        success: function (data) {
+                            location.reload();
+                        },
+                        error: function (response) {
+                            console.log(response)
+                        }
+                    });
+                }
+            });
+
+        });
+    </script>
+}
+

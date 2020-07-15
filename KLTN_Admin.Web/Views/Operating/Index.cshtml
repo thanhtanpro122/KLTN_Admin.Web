@@ -1,0 +1,90 @@
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList
+@using X.PagedList.Mvc.Common
+@model IPagedList<RouteDepartureViewModel>
+@{
+    ViewData["Title"] = "Operating";
+    ViewData["Page"] = "Operating";
+}
+<style>
+    .ui-autocomplete.ui-front {
+        z-index: 2147483647 !important;
+    }
+</style>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<div class="row grid-margin">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Điều Hành</h2>
+                <div class="table-toolbar">
+                    <div style="padding-bottom: 4rem;">
+                        <div style="float:right;">
+                            @using (Html.BeginForm("Index", "Operating", FormMethod.Post))
+                            {
+                                <input type="text" id="route" name="route" placeholder="Hành trình" class="form-control" style="width: auto; display: inline-block" />
+                                <input type="text" id="routeId" name="routeId" hidden />
+
+                                <input id="startDate" name="startDate" placeholder="Ngày khởi hành" class="form-control" style="width: auto; display: inline-block" />
+
+                                <button type="submit" id="btnTimKiem" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-search"></span> Search
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Tuyến xe</th>
+                            <th>Thời gian chạy</th>
+                            <th>Ngày chạy</th>
+                            <th>Vé đã đặt</th>
+                            <th>Hủy điều hành</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var tuyen = item.Route.StartLocation.Address + "->" + item.Route.EndLocation.Address;
+                            var thoigian = item.Route.StartTime + "-" + item.Route.EndTime;
+                            <tr>
+                                <td>@tuyen</td>
+                                <td>@thoigian</td>
+                                <td>@item.DepartureDate.ToString("MM/dd/yyyy")</td>
+                                <td>
+                                    <a asp-controller="Operating" asp-action="Payment" asp-route-id="@item.Id" class="btn btn-primary check_payment" data-id="@item.Id">
+                                        Danh sách đặt vé
+                                    </a>
+                                </td>
+                                <td>
+                                    <a asp-controller="Operating" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger delete_operating">
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div style="float:right;padding-top: 25px;">
+                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                    @(Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions
+                        {
+                            LiElementClasses = new string[] { "page-item" },
+                            PageClasses = new string[] { "page-link" },
+                            UlElementClasses = new string[] { "pagination rounded-flat pagination-success" }
+                        }))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+}
+

@@ -1,44 +1,68 @@
 ﻿@model List<AgentViewModel>
 
 <div class="container">
-    <div class="row">
-        <div class="col-6">
-            <label>
-                <input class="mode-select-agent" type="radio" name="agent-mode" value="1" checked /> Chọn nhà xe có sẵn
-            </label>
+    @if (Context.Request.Cookies["UserName"] == "root")
+    {
+        <div class="row">
+            <div class="col-6">
+                <label>
+                    <input class="mode-select-agent" type="radio" name="agent-mode" value="1" checked /> Chọn nhà xe có sẵn
+                </label>
+            </div>
+            <div class="col-6">
+                <label>
+                    <input type="radio" name="agent-mode" value="2" /> Chi định nhà xe mới
+                </label>
+            </div>
         </div>
-        <div class="col-6">
-            <label>
-                <input type="radio" name="agent-mode" value="2" /> Chi định nhà xe mới
-            </label>
+    }
+    else
+    {
+        <div hidden class="row">
+            <div class="col-6">
+                <label>
+                    <input class="mode-select-agent" type="radio" name="agent-mode" value="1" checked /> Chọn nhà xe có sẵn
+                </label>
+            </div>
+            <div class="col-6">
+                <label>
+                    <input type="radio" name="agent-mode" value="2" /> Chi định nhà xe mới
+                </label>
+            </div>
         </div>
-    </div>
+    }
     <div id="existing-agent">
         <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>Chọn</th>
-                <th>Tên nhà xe</th>
-                <th>Phí hủy</th>
-                <th>Đặt làm root</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var agent in Model)
-            {
-                <tr data-id="@agent.Id">
-                    <td>
-                        <input name="is-selected" type="checkbox" />
-                    </td>
-                    <td class="agent-name">@Html.DisplayFor(m => agent.Name)</td>
-                    <td>@Html.DisplayFor(m => agent.CancelFee)</td>
-                    <td>
-                        <input class="is-root" type="checkbox" />
-                    </td>
+            <thead>
+                <tr>
+                    <th>Chọn</th>
+                    <th>Tên nhà xe</th>
+                    <th>Phí hủy</th>
+                    @if (Context.Request.Cookies["UserName"] == "root")
+                    {
+                        <th>Đặt làm root</th>
+                    }
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var agent in Model)
+                {
+                    <tr data-id="@agent.Id">
+                        <td>
+                            <input name="is-selected" type="checkbox" />
+                        </td>
+                        <td class="agent-name">@Html.DisplayFor(m => agent.Name)</td>
+                        <td>@Html.DisplayFor(m => agent.CancelFee)</td>
+                        @if (Context.Request.Cookies["UserName"] == "root")
+                        {
+                            <td>
+                                <input class="is-root" type="checkbox" />
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 
     <div id="create-new-agent" style="display: none;">

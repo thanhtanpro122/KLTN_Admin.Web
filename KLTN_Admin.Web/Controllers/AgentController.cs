@@ -22,7 +22,11 @@ namespace KLTN_Admin.Web.Controllers
         }
         public IActionResult Index(string searchString, int? page)
         {
-            var model = _mapper.Map<List<AgentViewModel>>(_agentService.GetAllAgent());
+            if (String.IsNullOrWhiteSpace(Request.Cookies["AdminId"]))
+            {
+                return NotFound();
+            }
+            var model = _mapper.Map<List<AgentViewModel>>(_agentService.GetAllAgent(Request.Cookies["AdminId"]));
             int pageSize = 5;
             int pageNumber = (page ?? 1);
             return View(model.ToPagedList(pageNumber, pageSize));

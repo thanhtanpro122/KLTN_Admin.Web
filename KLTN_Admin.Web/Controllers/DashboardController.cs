@@ -39,10 +39,10 @@ namespace KLTN_Admin.Web.Controllers
         public IActionResult Login(AdminViewModel admin)
         {
             var data = _adminService.Signin(admin.UserName, admin.Password);
-            if (string.IsNullOrEmpty(data[0]))
+            if (data == null || string.IsNullOrEmpty(data[0]))
             {
-                TempData["Mesage"] = "";
-                return RedirectToAction("Login");
+                ViewBag.LoginMessage = "Invalid username or password";
+                return View();
             }
 
             var options = new CookieOptions
@@ -55,6 +55,7 @@ namespace KLTN_Admin.Web.Controllers
             Response.Cookies.Append("AdminType", admin.AdminType.ToString(), options);
             Response.Cookies.Append("Token", data[0], options);
             Response.Cookies.Append("AdminId", data[1], options);
+            Response.Cookies.Append("isRootAdmin", data[2], options);
             return RedirectToAction("Index");
         }
 

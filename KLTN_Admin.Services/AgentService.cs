@@ -87,9 +87,17 @@ namespace KLTN_Admin.Services
             return JsonConvert.DeserializeObject<AgentSharedModel>(response.Content);
         }
 
-        public List<AgentSharedModel> GetAllAgent()
+        public List<AgentSharedModel> GetAllAgent(string adminId)
         {
-            var request = new RestRequest("/agent", Method.GET);
+            var request = new RestRequest("/agent-by-admin/{admin_id}", Method.GET);
+            request.AddUrlSegment("admin_id", adminId);
+            return _client.Execute<List<AgentSharedModel>>(request).Data;
+        }
+
+        public List<AgentSharedModel> GetAgentsByAdminRoot(string adminId)
+        {
+            var request = new RestRequest("/agent-by-adminroot/{admin_id}", Method.GET);
+            request.AddUrlSegment("admin_id", adminId);
             return _client.Execute<List<AgentSharedModel>>(request).Data;
         }
     }

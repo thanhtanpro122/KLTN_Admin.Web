@@ -20,10 +20,9 @@
                         <div class="row">
                             <div class="col-lg-6 bg-white">
                                 <div class="auth-form-light text-left p-5">
-                                    <h2>Login</h2>
+                                    <h2>Login Admin</h2>
                                     @using (Html.BeginForm("Login", "DashBoard", FormMethod.Post, new { id = "login-form" }))
                                     {
-                                        <span id="summary-validate" class="text-center text-danger"></span>
                                         <div class="form-group">
                                             <label for="UserName">Username</label>
                                             <input type="text" class="form-control" id="UserName" name="UserName" placeholder="Username">
@@ -36,7 +35,8 @@
                                             <i class="mdi mdi-eye"></i>
                                             <span id="validate_pass" class="text-danger"></span>
                                         </div>
-                                        <div class="mt-5">
+                                        <span id="summary-validate" class="text-center text-danger">@ViewBag.LoginMessage</span>
+                                        <div style="margin-top: 1rem !important;">
                                             <button class="btn btn-block btn-success btn-lg" type="submit">Login</button>
                                         </div>
                                     }

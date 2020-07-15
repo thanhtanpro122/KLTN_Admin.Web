@@ -33,6 +33,12 @@ namespace KLTN_Admin.Web.ProfileMappings
             CreateMap<MapSharedModel, MapViewModel>().ReverseMap();
 
             CreateMap<RouteAddSharedModel, RouteAddViewModel>().ReverseMap();
+
+            CreateMap<RouteDepartureSharedModel, RouteDepartureViewModel>().ReverseMap();
+
+            CreateMap<RouteScheduleSharedModel, RouteScheduleViewModel>().ReverseMap();
+
+            CreateMap<BookingSharedModel, BookingViewModel>().ReverseMap();
         }
     }
 }
