@@ -13,14 +13,25 @@ namespace KLTN_Admin.Web.Controllers
     public class DashboardController : BaseController
     {
         private readonly IAdminService _adminService;
-        
-        public DashboardController(IAdminService adminService, IMapper mapper) : base(mapper)
+        private readonly IAgentService _agentService;
+
+        public DashboardController(IAdminService adminService,IAgentService agentService, IMapper mapper) : base(mapper)
         {
             _adminService = adminService;
+            _agentService = agentService;
         }
         public IActionResult Index()
         {
+            if (String.IsNullOrWhiteSpace(Request.Cookies["AdminId"]))
+            {
+                return NotFound();
+            }
+            ViewBag.Agent = _mapper.Map<List<AgentViewModel>>(_agentService.GetAllAgent(Request.Cookies["AdminId"]));
             return View();
+        }
+        public IActionResult ThongKe(string agentId, DateTime fromdate, DateTime todate)
+        {
+            return Json(null);
         }
         public IActionResult Login()
         {
@@ -70,7 +81,17 @@ namespace KLTN_Admin.Web.Controllers
 
         public ActionResult ChangePassword(string passold, string passnew)
         {
-            return Json(null);
+            var adminId = Request.Cookies["AdminId"];
+            if (string.IsNullOrWhiteSpace(adminId))
+            {
+                return Json(new { status = 401 });
+            }
+            var flag = _adminService.ChangePassword(adminId, passold, passnew);
+            if (!flag)
+            {
+                return Json(new { status = 200 });
+            }
+            return Json(new { status = 204 });
         }
 
     }

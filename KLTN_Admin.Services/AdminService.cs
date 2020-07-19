@@ -147,5 +147,17 @@ namespace KLTN_Admin.Services
             var request = new RestRequest("/managementadmin", Method.GET);
             return _client.Execute<List<ManagementSharedModel>>(request).Data;
         }
+
+        public bool ChangePassword(string adminId, string passold, string passnew)
+        {
+            var request = new RestRequest("/admin/changepassword", Method.POST, DataFormat.Json);
+            request.AddJsonBody(new { adminId, passold, passnew});
+            var response = _client.Execute(request);
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

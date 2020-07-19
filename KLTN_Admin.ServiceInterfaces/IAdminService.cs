@@ -29,5 +29,7 @@ namespace KLTN_Admin.ServiceInterfaces
 
         List<ManagementSharedModel> GetManagementByAdminId(string adminId);
 
+        bool ChangePassword(string adminId, string passold, string passnew);
+
     }
 }

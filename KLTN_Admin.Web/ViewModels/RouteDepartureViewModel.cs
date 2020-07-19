@@ -14,5 +14,7 @@ namespace KLTN_Admin.Web.ViewModels
         public RouteScheduleViewModel RouteSchedule { get; set; }
 
         public DateTime DepartureDate { get; set; }
+
+        public ConstViewModel Status { get; set; }
     }
 }

@@ -18,5 +18,8 @@ namespace KLTN_Admin.SharedModels
 
         [JsonProperty("departureDate")]
         public DateTime DepartureDate { get; set; }
+
+        [JsonProperty("status")]
+        public ConstSharedModel Status { get; set; }
     }
 }
