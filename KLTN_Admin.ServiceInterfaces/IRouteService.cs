@@ -26,5 +26,7 @@ namespace KLTN_Admin.ServiceInterfaces
         bool PaymentToBookingCode(string bookingCode);
 
         bool RemoveToBookingCode(string bookingCode);
+
+        bool RemoveToBookingId(string bookingId);
     }
 }

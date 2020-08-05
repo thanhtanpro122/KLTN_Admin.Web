@@ -1,6 +1,7 @@
 ﻿
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "DashBoard";
+    ViewData["Page"] = "DashBoard";
     var listAgent = (List<AgentViewModel>)ViewBag.Agent;
 }
 
@@ -45,6 +46,7 @@
 </div>
 
 @section scripts{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $("#fromdate").datepicker({
@@ -59,16 +61,80 @@
             });
             $("#thongke").click(function (e) {
                 $.ajax({
-                    url: "/Admin/DashBoard/ThongKe",
+                    url: "/DashBoard/ThongKe",
                     data: {
                         fromdate: $("#fromdate").val(),
                         todate: $("#todate").val(),
-                        adminId: $("#AgentId").children("option:selected").val()
+                        agentId: $("#AgentId").children("option:selected").val()
                     },
                     type: "GET",
                     contentType: "json",
                     success: function (res) {
-                        
+                        let labels = res.map(e => e.date);
+                        let completeTicketData = res.map(e => e.completeTickets);
+                        let cancelTicketData = res.map(e => e.cancelTickets);
+                        let revenueData = res.map(e => e.revenue);
+
+                        new Chart('chartThongKe', {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [
+                                    {
+                                        label: "Số lượng vé hoàn thành",
+                                        data: completeTicketData,
+                                        yAxisID: 'y-axis-1',
+                                        backgroundColor: 'rgb(255, 99, 132)'
+                                    },
+                                    {
+                                        label: "Số lượng vé hủy",
+                                        data: cancelTicketData,
+                                        yAxisID: 'y-axis-1',
+                                        backgroundColor: 'rgb(54, 162, 235)'
+                                    },
+                                    {
+                                        label: "Doanh thu",
+                                        type: 'line',
+                                        yAxisID: 'y-axis-2',
+                                        data: revenueData,
+                                        borderColor: 'rgb(54, 14, 205)'
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                title: {
+                                    display: true,
+                                    text: 'Biểu đồ thống kê - Ticket Booking'
+                                },
+                                tooltips: {
+                                    mode: 'index',
+                                    intersect: true
+                                },
+                                scales: {
+                                    yAxes: [
+                                        {
+                                            type: 'linear',
+                                            display: true,
+                                            position: 'left',
+                                            id: 'y-axis-1',
+                                            ticks: {
+                                                min: 0
+                                            }
+                                        },
+                                        {
+                                            type: 'linear',
+                                            display: true,
+                                            position: 'right',
+                                            id: 'y-axis-2',
+                                            gridLines: {
+                                                drawOnChartArea: false
+                                            }
+                                        }
+                                    ],
+                                }
+                            }
+                        });
                     },
                     error: function (response) {
                         console.log(response)

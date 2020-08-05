@@ -58,19 +58,26 @@
                             <td>@item.BookingCode</td>
                             <td>@item.Status.DisplayValue</td>
                             <td>
-                                @if (item.SeatStatus.Value == ConstValues.TrangThaiGhe.GiuCho)
+                                @if (item.Status.Value == ConstValues.TrangThaiDatCho.DaHuy)
                                 {
-                                    <a class="btn btn-primary check_payment" data-id="@item.Id" data-bookingcode="@item.BookingCode">
-                                        Thanh Toán
-                                    </a>
+                                    <p>Vé đã hủy</p>
+
                                 }
                                 else
                                 {
-                                    <button disabled class="btn btn-primary check_payment" data-id="@item.Id">
-                                        Đã thanh toán
-                                    </button>
+                                    @if (item.SeatStatus.Value == ConstValues.TrangThaiGhe.GiuCho)
+                                    {
+                                        <a class="btn btn-primary check_payment" data-id="@item.Id" data-bookingcode="@item.BookingCode">
+                                            Thanh Toán
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <button disabled class="btn btn-primary check_payment" data-id="@item.Id">
+                                            Đã thanh toán
+                                        </button>
+                                    }
                                 }
-
                             </td>
                             <td>
                                 @if (item.Status.Value == ConstValues.TrangThaiDatCho.DaHuy)
@@ -84,8 +91,11 @@
                                 }
                                 else
                                 {
-                                    <a data-id="@item.Id" data-bookingcode="@item.BookingCode" class="btn btn-danger delete_booking">
+                                    <a data-id="@item.Id" data-bookingcode="@item.BookingCode" class="btn btn-danger delete_bookingbyId">
                                         Hủy vé
+                                    </a>
+                                    <a data-id="@item.Id" data-bookingcode="@item.BookingCode" class="btn btn-danger delete_bookingbyBookingCode">
+                                        Hủy đặt chỗ
                                     </a>
                                 }
                             </td>
@@ -137,8 +147,8 @@
                     });
                 }
             });
-            $('.delete_booking').click(function (e) {
-                var result = confirm("Want to delete booking to booking code?");
+            $('.delete_bookingbyBookingCode').click(function (e) {
+                var result = confirm("Want to cancel booking to booking code?");
                 if (!result) {
                     e.preventDefault();
                 } else {
@@ -146,6 +156,32 @@
                         url: "/Operating/RemoveToBookingCode",
                         data: {
                             bookingCode: $(this).data("bookingcode")
+                        },
+                        type: "GET",
+                        contentType: "json",
+                        beforeSend: function () {
+                        },
+                        complete: function () {
+                        },
+                        success: function (data) {
+                            location.reload();
+                        },
+                        error: function (response) {
+                            console.log(response)
+                        }
+                    });
+                }
+            });
+
+            $('.delete_bookingbyId').click(function (e) {
+                var result = confirm("Want to cancel booking?");
+                if (!result) {
+                    e.preventDefault();
+                } else {
+                    $.ajax({
+                        url: "/Operating/RemoveToBookingId",
+                        data: {
+                            bookingId: $(this).data("id")
                         },
                         type: "GET",
                         contentType: "json",

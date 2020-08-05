@@ -31,5 +31,6 @@ namespace KLTN_Admin.ServiceInterfaces
 
         bool ChangePassword(string adminId, string passold, string passnew);
 
+        List<StatisticalSharedModel> Statistical(string agentId, DateTime fromdate, DateTime todate);
     }
 }

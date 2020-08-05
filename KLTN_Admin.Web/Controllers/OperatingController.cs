@@ -72,5 +72,15 @@ namespace KLTN_Admin.Web.Controllers
             }
             return Json(null);
         }
+
+        public IActionResult RemoveToBookingId(string bookingId)
+        {
+            var flag = _routeService.RemoveToBookingId(bookingId);
+            if (!flag)
+            {
+                return NotFound();
+            }
+            return Json(null);
+        }
     }
 }

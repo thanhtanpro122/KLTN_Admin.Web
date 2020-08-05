@@ -151,8 +151,26 @@ namespace KLTN_Admin.Services
 
         public bool RemoveToBookingCode(string bookingCode)
         {
-            var request = new RestRequest("/removeTicket/{bookingcode}", Method.POST, DataFormat.Json);
-            request.AddUrlSegment("bookingcode", bookingCode);
+            var request = new RestRequest("/booking/cancelTicketByCode", Method.POST, DataFormat.Json);
+            request.AddJsonBody(new
+            {
+                bookingCode
+            });
+            var response = _client.Execute(request);
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool RemoveToBookingId(string bookingId)
+        {
+            var request = new RestRequest("/booking/cancelTicketById", Method.POST, DataFormat.Json);
+            request.AddJsonBody(new
+            {
+                _id = bookingId
+            });
             var response = _client.Execute(request);
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {

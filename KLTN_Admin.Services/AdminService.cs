@@ -159,5 +159,21 @@ namespace KLTN_Admin.Services
             }
             return false;
         }
+
+        public List<StatisticalSharedModel> Statistical(string agentId, DateTime fromdate, DateTime todate)
+        {
+            var request = new RestRequest("/statistical", Method.POST, DataFormat.Json);
+            request.AddJsonBody(new { agentId, fromdate, todate });
+            var response = _client.Execute(request);
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var data = response.Content;
+                if (!string.IsNullOrWhiteSpace(data))
+                {
+                    return JsonConvert.DeserializeObject<List<StatisticalSharedModel>>(data);
+                }
+            }
+            return null;
+        }
     }
 }
