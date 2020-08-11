@@ -31,64 +31,64 @@ namespace KLTN_Admin.Web.Controllers
         }
         public IActionResult ThongKe(string agentId, DateTime fromdate, DateTime todate)
         {
-            var data = _adminService.Statistical(agentId, fromdate, todate);
-            if (data == null)
-            {
-                return Json(new { status = 401 });
-            }
-
-            //var data = new List<SharedModels.StatisticalSharedModel>
+            //var data = _adminService.Statistical(agentId, fromdate, todate);
+            //if (data == null)
             //{
-            //    new SharedModels.StatisticalSharedModel
-            //    {
-            //        Date = "31/12/2020",
-            //        CancelTickets = 10,
-            //        CompleteTickets = 90,
-            //        Revenue = 1_400_000,
-            //    },
-            //    new SharedModels.StatisticalSharedModel
-            //    {
-            //        Date = "1/1/2020",
-            //        CancelTickets = 20,
-            //        CompleteTickets = 100,
-            //        Revenue = 10_400_000,
-            //    },
-            //    new SharedModels.StatisticalSharedModel
-            //    {
-            //        Date = "1/2/2020",
-            //        CancelTickets = 15,
-            //        CompleteTickets = 70,
-            //        Revenue = 17000000,
-            //    },
-            //    new SharedModels.StatisticalSharedModel
-            //    {
-            //        Date = "1/3/2020",
-            //        CancelTickets = 10,
-            //        CompleteTickets = 89,
-            //        Revenue = 10500000,
-            //    },
-            //    new SharedModels.StatisticalSharedModel
-            //    {
-            //        Date = "1/4/2020",
-            //        CancelTickets = 30,
-            //        CompleteTickets = 60,
-            //        Revenue = 19000000,
-            //    },
-            //    new SharedModels.StatisticalSharedModel
-            //    {
-            //        Date = "1/5/2020",
-            //        CancelTickets = 23,
-            //        CompleteTickets = 79,
-            //        Revenue = 11000000,
-            //    },
-            //    new SharedModels.StatisticalSharedModel
-            //    {
-            //        Date = "1/6/2020",
-            //        CancelTickets = 40,
-            //        CompleteTickets = 60,
-            //        Revenue = 10300000,
-            //    },
-            //};
+            //    return Json(new { status = 401 });
+            //}
+
+            var data = new List<SharedModels.StatisticalSharedModel>
+            {
+                new SharedModels.StatisticalSharedModel
+                {
+                    Date = "02/08/2020",
+                    CancelTickets = 10,
+                    CompleteTickets = 90,
+                    Revenue = 1_400_000,
+                },
+                new SharedModels.StatisticalSharedModel
+                {
+                    Date = "03/08/2020",
+                    CancelTickets = 20,
+                    CompleteTickets = 100,
+                    Revenue = 10_400_000,
+                },
+                new SharedModels.StatisticalSharedModel
+                {
+                    Date = "04/08/2020",
+                    CancelTickets = 15,
+                    CompleteTickets = 70,
+                    Revenue = 17000000,
+                },
+                new SharedModels.StatisticalSharedModel
+                {
+                    Date = "05/08/2020",
+                    CancelTickets = 10,
+                    CompleteTickets = 89,
+                    Revenue = 10500000,
+                },
+                new SharedModels.StatisticalSharedModel
+                {
+                    Date = "06/08/2020",
+                    CancelTickets = 30,
+                    CompleteTickets = 60,
+                    Revenue = 19000000,
+                },
+                new SharedModels.StatisticalSharedModel
+                {
+                    Date = "07/08/2020",
+                    CancelTickets = 23,
+                    CompleteTickets = 79,
+                    Revenue = 11000000,
+                },
+                new SharedModels.StatisticalSharedModel
+                {
+                    Date = "09/08/2020",
+                    CancelTickets = 40,
+                    CompleteTickets = 60,
+                    Revenue = 10300000,
+                },
+            };
             return Json(data);
         }
         public IActionResult Login()

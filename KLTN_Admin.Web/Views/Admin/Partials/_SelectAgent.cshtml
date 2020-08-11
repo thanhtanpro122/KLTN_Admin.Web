@@ -33,10 +33,10 @@
     }
     <div id="existing-agent">
         <table class="table table-hover">
-            <thead>
+            <thead style="display: block;">
                 <tr>
                     <th>Chọn</th>
-                    <th>Tên nhà xe</th>
+                    <th style="width:145px;">Tên nhà xe</th>
                     <th>Phí hủy</th>
                     @if (Context.Request.Cookies["UserName"] == "root")
                     {
@@ -44,15 +44,15 @@
                     }
                 </tr>
             </thead>
-            <tbody>
+            <tbody style="display: block; height: 300px; overflow-y: auto; overflow-x: hidden;">
                 @foreach (var agent in Model)
                 {
                     <tr data-id="@agent.Id">
-                        <td>
+                        <td style="width: 65px;">
                             <input name="is-selected" type="checkbox" />
                         </td>
-                        <td class="agent-name">@Html.DisplayFor(m => agent.Name)</td>
-                        <td>@Html.DisplayFor(m => agent.CancelFee)</td>
+                        <td style="width: 150px;" class="agent-name">@Html.DisplayFor(m => agent.Name)</td>
+                        <td style="width: 100px;">@Html.DisplayFor(m => agent.CancelFee)</td>
                         @if (Context.Request.Cookies["UserName"] == "root")
                         {
                             <td>

@@ -104,7 +104,7 @@
                             <span class="menu-title">Xe</span>
                         </a>
                     </li>
-                    @if (Context.Request.Cookies["UserName"] == "root")
+                    @*@if (Context.Request.Cookies["UserName"] == "root")
                     {
                         <li class="nav-item @((string)ViewData["Page"] == "Location" ? "active" : "")">
                             <a class="nav-link" href="/Location/Index">
@@ -118,7 +118,7 @@
                                 <span class="menu-title">Hằng số</span>
                             </a>
                         </li>
-                    }
+                    }*@
                     </ul>
             </nav>
             <!-- partial -->
@@ -162,17 +162,17 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="exampleInputName1">Mật khẩu cũ</label>
-                            <input type="text" class="form-control" id="password_old" name="password_old">
+                            <input type="password" class="form-control" id="password_old" name="password_old">
                             <span id="validate_pass_old" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputName1">Mật khẩu mới</label>
-                            <input type="text" class="form-control" id="password_new" name="password_new">
+                            <input type="password" class="form-control" id="password_new" name="password_new">
                             <span id="validate_pass_new" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword4">Xác nhận mật khẩu</label>
-                            <input type="text" class="form-control" id="password_confirm" name="password_confirm">
+                            <input type="password" class="form-control" id="password_confirm" name="password_confirm">
                             <span id="validate_pass_confirm" class="text-danger"></span>
                         </div>
                     </div>
@@ -238,7 +238,8 @@
                             }
                             else {
                                 alert("Doi mat khau thanh cong");
-                                location.reload();
+                                window.location.replace("/Dashboard/Logout")
+                                //location.reload();
                             }
                         },
                         error: function (response) {

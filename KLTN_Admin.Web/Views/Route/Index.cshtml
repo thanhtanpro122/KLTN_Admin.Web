@@ -52,6 +52,7 @@
                             <th>Tuyến xe</th>
                             <th>Thời gian chạy</th>
                             <th>Xe</th>
+                            <th>Biển số</th>
                             <th>Nhà xe</th>
                             @*<th>Đổi trạng thái</th>*@
                             <th>Chỉnh sửa</th>
@@ -62,6 +63,10 @@
                         @foreach (var item in Model)
                         {
                             var tuyen = item.StartLocation.Address + "->" + item.EndLocation.Address;
+                            if (item.IsCorrectRoute == false)
+                            {
+                                tuyen = item.EndLocation.Address + "->" + item.StartLocation.Address;
+                            }
                             var thoigian = item.StartTime + "-" + item.EndTime;
 
                             <tr>
@@ -70,6 +75,7 @@
                                 <td>@tuyen</td>
                                 <td>@thoigian</td>
                                 <td>@item.Vehicle.Name</td>
+                                <td>@item.Vehicle.LicensePlates</td>
                                 <td>@item.VehicleAgent.Name</td>
                                 @*<td>
                                     @if (item.Status.Value == ConstValues.TrangThaiHanhTrinh.ChuaDi)

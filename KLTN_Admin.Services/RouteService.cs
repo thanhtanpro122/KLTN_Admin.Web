@@ -136,7 +136,7 @@ namespace KLTN_Admin.Services
 
         public bool PaymentToBookingCode(string bookingcode)
         {
-            var request = new RestRequest("/adminpayment", Method.POST, DataFormat.Json);
+            var request = new RestRequest("/confirmPayment", Method.POST, DataFormat.Json);
             request.AddJsonBody(new
             {
                 bookingCode = bookingcode
@@ -169,7 +169,7 @@ namespace KLTN_Admin.Services
             var request = new RestRequest("/booking/cancelTicketById", Method.POST, DataFormat.Json);
             request.AddJsonBody(new
             {
-                _id = bookingId
+                ticketId = bookingId
             });
             var response = _client.Execute(request);
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
