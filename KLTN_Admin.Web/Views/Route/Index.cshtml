@@ -55,7 +55,7 @@
                             <th>Biển số</th>
                             <th>Nhà xe</th>
                             @*<th>Đổi trạng thái</th>*@
-                            <th>Chỉnh sửa</th>
+                            @*<th>Chỉnh sửa</th>*@
                             <th>Xóa</th>
                         </tr>
                     </thead>
@@ -102,11 +102,11 @@
                                     }
 
                                 </td>*@
-                                <td>
+                                @*<td>
                                     <a class="btn btn-primary edit-dieuhanh" data-id="@item.Id">
                                         Edit
                                     </a>
-                                </td>
+                                </td>*@
                                 <td>
                                     <a asp-controller="Route" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger delete_dieuhanh">
                                         Delete
